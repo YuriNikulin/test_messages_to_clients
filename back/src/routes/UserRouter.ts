@@ -1,13 +1,12 @@
-import { ServiceRouter } from "../../types"
+import { ServiceRouter } from "../types"
+import { User } from "../entities"
 
 const UserRouter: ServiceRouter = (app) => {
     app.get('/user', (req, res) => {
         res.send('get user')
     })
 
-    app.post('/user', (req, res) => {
-        res.send('post user')
-    })
+    app.post('/user', User.save)
 }
 
 export { UserRouter }
