@@ -1,8 +1,8 @@
-import { prisma } from '../services/DbService'
+import { StorageService } from '../services/StorageService'
 
 class Channel {
-    fillTableWithData() {
-
+    public static fillTableWithData() {
+        StorageService.sayHi()
     }
 }
 
