@@ -1,8 +1,8 @@
-import { UserController } from './UserController'
-import { Controller } from 'types'
+import { UserRouter } from './UserController'
+import { Router } from 'types'
 
-const RootController: Controller = (app) => {
-    UserController(app)
+const RootController: Router = (app) => {
+    UserRouter(app)
 }
 
 export { RootController }

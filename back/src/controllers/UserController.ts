@@ -1,10 +1,9 @@
-import { Controller } from "../types"
+import { RequestHandler, Router } from "../types"
 import { User } from "../entities"
 import { STATUS_CODES } from "http"
 
-const UserController: Controller = (app) => {
-    app.get('/user/list', User.getList)
-    app.post('/user', async (req, res) => {
+class UserController {
+    static create: RequestHandler = async (req, res) => {
         if (req.body.login && req.body.password && req.body.password2) {
             if (req.body.password !== req.body.password2) {
                 res.status(400).send({
@@ -25,7 +24,18 @@ const UserController: Controller = (app) => {
                 message: 'Все поля обязательны для заполнения'
             })
         }
-    })
+    }
+
+    static findMany: RequestHandler = async (req, res) => {
+        const result = await User.findMany()
+        res.send(result)
+    }
 }
 
-export { UserController }
+const UserRouter: Router = (app) => {
+    app.get('/user/list', UserController.findMany)
+
+    app.post('/user', UserController.create)
+}
+
+export { UserRouter }

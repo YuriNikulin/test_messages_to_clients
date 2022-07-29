@@ -16,8 +16,13 @@ class User {
         }
     }
 
-    public static getList = async () => {
-        // const data = StorageService.
+    public static findMany = async () => {
+        return StorageService.user.findMany({
+            select: {
+                login: true,
+                id: true
+            }
+        })
     }
 }
 

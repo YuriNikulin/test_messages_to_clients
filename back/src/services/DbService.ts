@@ -22,6 +22,10 @@ class DbServiceClass implements IStorage {
         create: (args) => {
             return this.prisma.user.create(args)
         },
+
+        findMany: (args) => {
+            return this.prisma.user.findMany(args)
+        }
     }
 }
 
