@@ -8,12 +8,14 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
+  id       Int              @id @default(autoincrement())
   login    String
   password String
+  channels Channel[]
 }
 
 model Channel {
-  id  String @id @unique
-  name String @unique
+  id    String           @id @unique
+  name  String           @unique
+  users User[]
 }

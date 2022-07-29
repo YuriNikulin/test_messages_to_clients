@@ -14,8 +14,10 @@ class UserController {
             }
 
             await User.save({
-                login: req.body.login,
-                password: req.body.password
+                data: {
+                    login: req.body.login,
+                    password: req.body.password
+                }
             })
 
             res.sendStatus(200)

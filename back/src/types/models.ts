@@ -6,6 +6,9 @@ type PrismaUsedMethods = 'create' | 'findMany'
 
 type Methods<Entity extends EntitiesKeys> = Pick<PrismaClientType[Entity], PrismaUsedMethods>
 export type UserMethods = Methods<'user'>
+export type UserMethodsPayload = {
+    [method in keyof UserMethods]: Parameters<UserMethods[method]>[0]
+}
 
 type StorageEntities = {
     user: UserMethods

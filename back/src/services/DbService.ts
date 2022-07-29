@@ -19,8 +19,20 @@ class DbServiceClass implements IStorage {
     }
 
     user: UserMethods = {
+        // @ts-ignore
         create: (args) => {
             return this.prisma.user.create(args)
+            // return this.prisma.user.create({
+            //     data: {
+            //         login: 'withlogin',
+            //         password: '123',
+            //         channels: {
+            //             connect: {
+            //                 id: 'vk'
+            //             }
+            //         }
+            //     }
+            // })
         },
 
         findMany: (args) => {

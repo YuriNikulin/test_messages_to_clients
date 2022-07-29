@@ -1,15 +1,12 @@
 import { StorageService } from '../services/StorageService'
-import { DbService } from '../services/DbService'
-import { RequestHandler } from "types"
 import { User as UserModel } from '@prisma/client'
+import { UserMethodsPayload } from 'types'
 
 class User {
-    public static save = async (payload: Record<string, unknown>) => {
+    public static save = async (payload: UserMethodsPayload['create']) => {
         try {
-            if (payload.login && payload.password) {
-                return await StorageService.user.create({
-                    data: { ...payload as UserModel }
-                })
+            if (payload.data.login && payload.data.password) {
+                return await StorageService.user.create(payload)
             }
         } catch(e) {
             console.log(e)
@@ -20,9 +17,27 @@ class User {
         return StorageService.user.findMany({
             select: {
                 login: true,
-                id: true
+                id: true,
+                channels: true
             }
         })
+    }
+
+    public static createFirstUserIfNecessary = async () => {
+        const existingUsers = await User.findMany()
+        if (!existingUsers.length) {
+            User.save({
+                data: {
+                    login: 'user',
+                    password: 'user',
+                    channels: {
+                        connect: {
+                            id: 'vk'
+                        }
+                    }
+                }
+            })
+        }
     }
 }
 
