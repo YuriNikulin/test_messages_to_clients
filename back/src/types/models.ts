@@ -7,49 +7,13 @@ import { Channel, User, PrismaClient, Prisma } from '@prisma/client'
 
 export type EntitiesKeys = 'channel' | 'user'
 export type PrismaClientType = InstanceType<typeof PrismaClient>
+type PrismaUsedMethods = 'create'
 
-
-type StorageEntitiesMethod<P, R = any> = (payload: P) => Promise<R>
-
-interface DataCommon {
-    entity: EntitiesKeys;
-}
-
-interface CreateDataUser extends DataCommon {
-    entity: 'user';
-    payload: {
-        data: User
-    }
-}
-
-interface CreateDataChannel extends DataCommon {
-    entity: 'channel';
-    payload: {
-        data: Channel
-    }
-}
-
-interface FindManyUser extends DataCommon {
-    entity: 'user';
-    payload: {
-        where: User
-    }
-}
-
-interface FindManyChannel extends DataCommon {
-    entity: 'user';
-    payload: {
-        where: Channel
-    }
-}
-
-export type CreateData = CreateDataUser | CreateDataChannel
+type Methods<Entity extends EntitiesKeys> = Pick<PrismaClientType[Entity], PrismaUsedMethods>
+export type UserMethods = Methods<'user'>
 
 type StorageEntities = {
-    create: StorageEntitiesMethod<CreateData>
-    // createMany: () => any;
-    // findMany: () => any;
-    // update: () => any;
+    user: UserMethods
 }
 
 export interface IStorage extends StorageEntities {}

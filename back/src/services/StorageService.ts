@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { DbService } from './DbService'
 import { LocalStorageService } from './LocalStorageService'
 import { config } from '../config'
-import { CreateData, IStorage } from 'types/index';
+import { IStorage } from 'types/index';
 
 
 
@@ -38,9 +38,7 @@ class StorageServiceClass {
         console.log('hi from storage service')
     }
 
-    create(payload: CreateData) {
-        return this.storage.create(payload)
-    }
+    user = this.storage.user
 }
 
 export const StorageService = new StorageServiceClass()

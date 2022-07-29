@@ -1,5 +1,5 @@
 import express from 'express'
-import { RootRouter } from './routes/RootRouter'
+import { RootController } from './controllers/RootController'
 import { config } from './config'
 import { Channel } from './entities'
 
@@ -9,5 +9,5 @@ app.use(express.json())
 
 app.listen(config.port)
 
-RootRouter(app)
+RootController(app)
 Channel.fillTableWithData()

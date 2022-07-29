@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { EntitiesKeys, IStorage, CreateData } from 'types'
+import { EntitiesKeys, IStorage, UserMethods } from 'types'
 
 class DbServiceClass implements IStorage {
     prisma: PrismaClient
@@ -18,15 +18,10 @@ class DbServiceClass implements IStorage {
         }
     }
 
-    create: (
-        payload: CreateData
-    ) => Promise<any> = async (data) => {
-        try {
-            // @ts-ignore
-            this.prisma[data.entity].create(data.payload)
-        } catch(e) {
-            console.error(e)
-        }
+    user: UserMethods = {
+        create: (args) => {
+            return this.prisma.user.create(args)
+        },
     }
 }
 

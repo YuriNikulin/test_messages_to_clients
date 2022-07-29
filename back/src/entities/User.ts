@@ -1,15 +1,22 @@
 import { StorageService } from '../services/StorageService'
+import { DbService } from '../services/DbService'
 import { RequestHandler } from "types"
+import { User as UserModel } from '@prisma/client'
 
 class User {
-    public static save: RequestHandler = async (req, res) => {
-        if (req.body.login && req.body.password) {
+    public static save = async (payload: Record<string, unknown>) => {
+        try {
+            if (payload.login && payload.password) {
+                return await StorageService.user.create({
+                    data: { ...payload as UserModel }
+                })
+            }
+        } catch(e) {
+            console.log(e)
         }
-        res.send('ok')
-        return {}
     }
 
-    public static getList: RequestHandler = async (req, res) => {
+    public static getList = async () => {
         // const data = StorageService.
     }
 }
