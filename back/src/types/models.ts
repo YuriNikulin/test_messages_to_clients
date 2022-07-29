@@ -1,5 +1,9 @@
 import { Channel, User, PrismaClient, Prisma } from '@prisma/client'
 
+export type UserModel = User & {
+    channels: Channel[];
+}
+
 export type EntitiesKeys = 'channel' | 'user'
 export type PrismaClientType = InstanceType<typeof PrismaClient>
 type PrismaUsedMethods = 'create' | 'findMany' | 'findFirst'

@@ -1,5 +1,8 @@
-import { hash } from 'bcrypt'
+import { hash, compare } from 'bcrypt'
+import { UserModel } from 'types'
 import { config } from '../config'
+import jwt from 'jsonwebtoken'
+
 
 class AuthServiceClass {
     async hashPassword(password: string) {
@@ -8,7 +11,17 @@ class AuthServiceClass {
     }
 
     async comparePasswords(rawPassword: string, hashedPassword: string) {
-        console.log(rawPassword, hashedPassword)
+        const passwordsAreEqual = await compare(rawPassword, hashedPassword)
+        return passwordsAreEqual
+    }
+
+    async generateUserToken({ channels, id, login }: UserModel) {
+        const secret = process.env.JWT_SECRET
+        const result = jwt.sign({
+            channels, id, login
+        }, secret as string)
+
+        return result
     }
 }
 

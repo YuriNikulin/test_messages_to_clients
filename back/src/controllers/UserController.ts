@@ -1,4 +1,4 @@
-import { RequestHandler, Router } from "../types"
+import { HTTP_STATUSES, RequestHandler, Router, UserModel } from "../types"
 import { User } from "../entities"
 import { STATUS_CODES } from "http"
 
@@ -8,13 +8,13 @@ class UserController {
             const existingUser = await User.getByLogin(req.body.login)
 
             if (existingUser) {
-                res.status(400).send({
+                res.status(HTTP_STATUSES.ERROR_REQUEST).send({
                     login: 'Пользователь с таким именем уже существует'
                 })
             }
 
             if (req.body.password !== req.body.password2) {
-                res.status(400).send({
+                res.status(HTTP_STATUSES.ERROR_REQUEST).send({
                     password: 'Пароли не совпадают'
                 })
 
@@ -28,9 +28,9 @@ class UserController {
                 }
             })
 
-            res.sendStatus(200)
+            return res.sendStatus(HTTP_STATUSES.SUCCESS)
         } else {
-            res.status(400).send({
+            return res.status(HTTP_STATUSES.ERROR_REQUEST).send({
                 message: 'Все поля обязательны для заполнения'
             })
         }
@@ -38,19 +38,34 @@ class UserController {
 
     static login: RequestHandler = async (req, res) => {
         if (req.body.login && req.body.password) {
-            const user = User.getByLogin(req.body.login)
+            const user = await User.getByLogin(req.body.login, {
+                select: {
+                    channels: true,
+                    id: true,
+                    login: true,
+                    password: true
+                }
+            })
 
             if (!user) {
-                res.status(400).send({
+                return res.status(HTTP_STATUSES.ERROR_NOT_FOUND).send({
                     login: 'Пользователя с таким именем не существует'
                 })
             }
 
-            const credentialsAreCorrect = User.checkCredentials(req.body.login, req.body.password)
-            res.sendStatus(200)
+            const credentialsAreCorrect = await User.checkCredentials(req.body.login, req.body.password)
+            if (!credentialsAreCorrect) {
+                return res.status(HTTP_STATUSES.ERROR_REQUEST).send({
+                    password: 'Неправильное имя пользователя или пароль'
+                })
+            }
+
+            const userToken = await User.getToken(user as UserModel)
+
+            return res.setHeader('Authorization', `Bearer ${userToken}`).sendStatus(HTTP_STATUSES.SUCCESS)
             
         } else {
-            res.status(400).send({
+            res.status(HTTP_STATUSES.ERROR_REQUEST).send({
                 message: 'Все поля обязательны для заполнения'
             })
         }

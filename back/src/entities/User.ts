@@ -1,7 +1,6 @@
 import { StorageService } from '../services/StorageService'
 import { AuthService } from '../services/AuthService'
-import { User as UserModel } from '@prisma/client'
-import { UserMethodsPayload } from 'types'
+import { UserMethodsPayload, UserModel } from 'types'
 
 class User {
     public static save = async (payload: UserMethodsPayload['create']) => {
@@ -53,11 +52,13 @@ class User {
         return StorageService.user.findFirst(payload)
     }
 
-    public static getByLogin = async (login: string) => {
+    public static getByLogin =
+        async (login: string, payload: Partial<UserMethodsPayload['findFirst']> = {}) => {
         const existingUser = await User.findFirst({
             where: {
                 login
-            }
+            },
+            ...payload
         })
 
         return existingUser
@@ -69,7 +70,12 @@ class User {
             throw new Error('Пользователя не существует')
         }
 
-        const isPasswordCorrect = AuthService.comparePasswords(password, existingUser.password)
+        const isPasswordCorrect = await AuthService.comparePasswords(password, existingUser.password)
+        return isPasswordCorrect
+    }
+
+    public static getToken = async(user: UserModel) => {
+        return await AuthService.generateUserToken(user)
     }
 }
 
