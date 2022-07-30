@@ -1,38 +1,61 @@
-import { ComponentProps, useCallback } from 'react'
-import { Field, Form } from 'react-final-form'
-import { FormGroup, InputGroup, InputGroupProps } from '@blueprintjs/core'
+import { useCallback } from 'react'
+import { Field, Form, useForm } from 'react-final-form'
+import { Button } from '@blueprintjs/core'
 import { Input } from 'components/form'
 import { FormField } from 'components/form-field'
+import { LoginFormProps } from './login-form-types'
+import { getValidator } from 'utils/validator'
 
-const LoginForm: FunctionComponent = (props) => {
-    const handleSubmit: FormSubmitHandler = useCallback((value) => {
-        console.log(value)
-    }, [])
+const validate = getValidator({
+    login: {
+        required: true
+    },
+    password: {
+        required: true
+    }
+})
 
+const LoginForm: FunctionComponent<LoginFormProps> = (props) => {
     return (
-        <Form onSubmit={handleSubmit}>
-            {props => {
-                console.log(props)
+        <Form 
+            onSubmit={props.onSubmit}
+            validate={validate}
+            render={({ handleSubmit }) => {
                 return (
-                    <FormGroup>
-                        <FormField
-                            name="login"
-                            component={Input}
-                            componentProps={{
-                                placeholder: "Логин",
-                            }}
-                        />
-                        <FormField
-                            name="password"
-                            component={Input}
-                            componentProps={{
-                                placeholder: "Пароль",
-                                isPassword: true
-                            }}
-                        />
-                    </FormGroup>
+                    <form onSubmit={handleSubmit} name="login">
+                        <div className="mb-3">
+                            <FormField
+                                name="login"
+                                component={Input}
+                                componentProps={{
+                                    placeholder: "Логин",
+                                    large: true
+                                }}
+                            />
+                        </div>
+                        <div className="mb-6">
+                            <FormField
+                                name="password"
+                                component={Input}
+                                componentProps={{
+                                    placeholder: "Пароль",
+                                    isPassword: true,
+                                    large: true
+                                }}
+                            />
+                        </div>
+                        <div className="flex justify-space-between">
+                            <Button type="submit" large>
+                                Войти
+                            </Button>
+                            <Button minimal>
+                                Зарегистрироваться
+                            </Button>
+                        </div>
+                    </form>
                 )
             }}
+            >
         </Form>
     )
 }

@@ -4,3 +4,8 @@ body {
     background-color: $background-color;
     font-family: $font-family;
 }
+
+.error {
+    color: $pt-intent-danger;
+    font-size: $pt-font-size-small;
+}

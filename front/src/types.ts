@@ -1,4 +1,4 @@
-export interface Channel {
+export interface IChannel {
     id: string;
     name: string;
 }
@@ -6,5 +6,10 @@ export interface Channel {
 export interface IUser {
     id: number;
     login: string;
-    channels: Channel[];
+    channels: IChannel[];
+}
+
+export enum ResponseType {
+    SUCCESS = 'SUCCESS',
+    ERRROR = 'ERROR'
 }

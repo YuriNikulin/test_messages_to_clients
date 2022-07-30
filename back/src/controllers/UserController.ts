@@ -1,6 +1,7 @@
 import { HTTP_STATUSES, RequestHandler, Router, UserModel } from "../types"
 import { User } from "../entities"
 import { STATUS_CODES } from "http"
+import { API_1 } from "../constants"
 
 class UserController {
     static create: RequestHandler = async (req, res) => {
@@ -37,6 +38,7 @@ class UserController {
     }
 
     static login: RequestHandler = async (req, res) => {
+        console.log(req.body)
         if (req.body.login && req.body.password) {
             const user = await User.getByLogin(req.body.login, {
                 select: {
@@ -78,11 +80,11 @@ class UserController {
 }
 
 const UserRouter: Router = (app) => {
-    app.get('/user/list', UserController.findMany)
+    app.get(`/${API_1}/user/list`, UserController.findMany)
 
-    app.post('/user/register', UserController.create)
+    app.post(`/${API_1}'user/register`, UserController.create)
 
-    app.post('/user/login', UserController.login)
+    app.post(`/${API_1}/user/login`, UserController.login)
 }
 
 export { UserRouter }

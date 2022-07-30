@@ -1,5 +1,6 @@
 import React from 'react'
 import { FormProps, Field } from 'react-final-form'
+import { ResponseType } from 'types';
 
 declare global {
     type FunctionComponent<P = {}> = React.FunctionComponent<P & {
@@ -8,4 +9,25 @@ declare global {
     
     type FormSubmitHandler = FormProps['onSubmit'];
     type Field = any
+
+    interface ValidatorConfig {
+        [key: string]: {
+            required?: boolean;
+        }
+    }
+
+    interface ApiConfig {
+        body?: Record<string, unknown>;
+        returnRawResponse?: boolean;
+    }
+
+    interface ApiResponse {
+        status: number;
+        type: ResponseType;
+        data: unknown;
+    }
+
+    interface Endpoint {
+        url: string
+    }
 }

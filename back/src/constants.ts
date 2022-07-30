@@ -1,0 +1,1 @@
+export const API_1 = 'api/v1'

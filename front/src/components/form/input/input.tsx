@@ -1,4 +1,5 @@
 import { InputGroup } from '@blueprintjs/core'
+import { Error } from '../error'
 import { IInputProps } from './input-types'
 
 export const Input: FunctionComponent<IInputProps> = (props) => {
@@ -6,7 +7,12 @@ export const Input: FunctionComponent<IInputProps> = (props) => {
     
     return (
         <div>
-            <InputGroup {...rest} type={isPassword ? 'password' : rest.type} />
+            <InputGroup
+                {...rest}
+                {...input}
+                type={isPassword ? 'password' : rest.type}
+            />
+            <Error meta={meta} />
         </div>
     )
 }
