@@ -9,3 +9,18 @@ body {
     color: $pt-intent-danger;
     font-size: $pt-font-size-small;
 }
+
+#root {
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    & > div {
+        flex-grow: 1;
+
+        &.Toastify {
+            flex-grow: 0;
+        }
+    }
+}

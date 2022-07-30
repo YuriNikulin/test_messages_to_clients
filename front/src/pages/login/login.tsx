@@ -1,11 +1,8 @@
-import { Dialog, Classes, Spinner } from '@blueprintjs/core'
-import { FORM_ERROR } from 'final-form'
-import { useAuth } from 'hooks/useAuth'
+import { Dialog, Classes } from '@blueprintjs/core'
+import { useAuth } from 'containers/Auth'
 import { useLoading } from 'hooks/useLoading'
 import { useCallback } from 'react'
-import { useForm } from 'react-final-form'
 import { ResponseType } from 'types'
-import { sleep } from 'utils/common'
 import { LoginForm } from './login-form'
 
 const Login: FunctionComponent = () => {

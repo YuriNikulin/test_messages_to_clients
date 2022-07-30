@@ -1,6 +1,8 @@
 import { toast, ToastOptions } from "react-toastify"
 import { Icon } from '@blueprintjs/core'
 import { IconNames, iconNameToPathsRecordKey } from '@blueprintjs/icons'
+import { Storage } from "./localStorage"
+import { LOCAL_STORAGE_TOKEN_KEY } from "constants/common"
 
 export const sleep = (ms: number, shouldReject?: boolean) => {
     return new Promise<void>((resolve, reject) => {
@@ -32,3 +34,5 @@ export const showNotification = (message: string, options?: ToastOptions) => {
         ..._options
     })
 }
+
+export const hasUserToken = () => !!Storage.get(LOCAL_STORAGE_TOKEN_KEY)
