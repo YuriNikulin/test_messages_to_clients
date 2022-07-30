@@ -19,10 +19,17 @@ const LoginForm: FunctionComponent = (props) => {
                             name="login"
                             component={Input}
                             componentProps={{
-                                
+                                placeholder: "Логин",
                             }}
                         />
-                        
+                        <FormField
+                            name="password"
+                            component={Input}
+                            componentProps={{
+                                placeholder: "Пароль",
+                                isPassword: true
+                            }}
+                        />
                     </FormGroup>
                 )
             }}
