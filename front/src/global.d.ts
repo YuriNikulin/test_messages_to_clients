@@ -1,6 +1,7 @@
 import React from 'react'
 import { FormProps, Field } from 'react-final-form'
 import { ResponseType } from 'types';
+import { HTTPMethods } from './types'
 
 declare global {
     type FunctionComponent<P = {}> = React.FunctionComponent<P & {
@@ -19,15 +20,17 @@ declare global {
     interface ApiConfig {
         body?: Record<string, unknown>;
         returnRawResponse?: boolean;
+        showMessageFromBack?: boolean;
     }
 
     interface ApiResponse {
-        status: number;
+        status?: number;
         type: ResponseType;
         data: unknown;
     }
 
     interface Endpoint {
-        url: string
+        url: string;
+        method: HTTPMethods
     }
 }

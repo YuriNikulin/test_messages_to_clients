@@ -1,15 +1,15 @@
-import { API_V1, BACKEND_HOST } from "constants/common"
+import { API_V1, BACKEND_HOST, LOCAL_STORAGE_TOKEN_KEY } from "constants/common"
 import { ResponseType } from "types"
+import { isObject, showNotification } from "utils/common"
+import { Storage } from "utils/localStorage"
 
-const actions = ['get', 'post'] as const
 
-type action = typeof actions[number]
-
-const makeRequest = (method: action) => async (endpoint: Endpoint, config: ApiConfig = {}) => {
+const makeRequest = async (endpoint: Endpoint, config: ApiConfig = {}) => {
     let url = `${BACKEND_HOST}/${API_V1}/${endpoint.url}`
+    let result
     try {
         const payload: RequestInit = {
-            method
+            method: endpoint.method
         }
 
         if (config.body) {
@@ -20,29 +20,42 @@ const makeRequest = (method: action) => async (endpoint: Endpoint, config: ApiCo
             "Content-Type": "application/json"
         }
 
-        const res = await fetch(url, payload)
-        if (config.returnRawResponse) {
-            return res
+        const token = Storage.get(LOCAL_STORAGE_TOKEN_KEY)
+        if (token) {
+            payload.headers.Authorization = `Bearer ${token}`
         }
 
+        const res = await fetch(url, payload)
+
         const resJson = await res.json()
-        return { 
+        result = { 
             type: res.ok ? ResponseType.SUCCESS : ResponseType.ERRROR,
             status: res.status,
             data: resJson
         } as ApiResponse
         
     } catch(e) {
-        console.log(e)
+        result = {
+            type: ResponseType.ERRROR,
+            data: e
+        }
     }
+
+    if (
+        result.type === ResponseType.ERRROR &&
+        config.showMessageFromBack !== false &&
+        isObject(result.data) &&
+        result.data.message
+    ) {
+        showNotification(result.data.message as string, { type: 'error' })
+    }
+
+    return result
 }
 
-const api = actions.reduce<Record<action, ReturnType<typeof makeRequest>>>((acc, curr) => {
-    return {
-        ...acc,
-        [curr]: makeRequest(curr)
-    }
-}, {} as any)
+const api = {
+    makeRequest
+}
 
 
 export { api }

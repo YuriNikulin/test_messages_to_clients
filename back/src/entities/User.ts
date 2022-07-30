@@ -1,6 +1,7 @@
 import { StorageService } from '../services/StorageService'
 import { AuthService } from '../services/AuthService'
 import { UserMethodsPayload, UserModel } from 'types'
+import { userQuerySelector } from '../querySelectors'
 
 class User {
     public static save = async (payload: UserMethodsPayload['create']) => {
@@ -23,11 +24,7 @@ class User {
 
     public static findMany = async () => {
         return StorageService.user.findMany({
-            select: {
-                login: true,
-                id: true,
-                channels: true
-            }
+            select: userQuerySelector
         })
     }
 
@@ -52,12 +49,17 @@ class User {
         return StorageService.user.findFirst(payload)
     }
 
-    public static getByLogin =
-        async (login: string, payload: Partial<UserMethodsPayload['findFirst']> = {}) => {
+    public static getBy =
+        async (
+            searchKey: 'id' | 'login' = 'id',
+            searchValue: number | string,
+            payload: Partial<UserMethodsPayload['findFirst']> = {}
+        ) => {
         const existingUser = await User.findFirst({
             where: {
-                login
+                [searchKey]: searchValue
             },
+            select: userQuerySelector,
             ...payload
         })
 
@@ -65,7 +67,11 @@ class User {
     }
 
     public static checkCredentials = async (login: string, password: string) => {
-        const existingUser = await User.getByLogin(login)
+        const existingUser = await User.getBy('login', login, {
+            select: {
+                password: true
+            }
+        })
         if (!existingUser) {
             throw new Error('Пользователя не существует')
         }

@@ -45,7 +45,7 @@ const LoginForm: FunctionComponent<LoginFormProps> = (props) => {
                             />
                         </div>
                         <div className="flex justify-space-between">
-                            <Button type="submit" large>
+                            <Button type="submit" large loading={props.isLoading}>
                                 Войти
                             </Button>
                             <Button minimal>

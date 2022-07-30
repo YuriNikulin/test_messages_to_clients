@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken'
 
 
 class AuthServiceClass {
+    private static secret = process.env.JWT_SECRET as string
     async hashPassword(password: string) {
         const hashedPassword = await hash(password, config.passwordSaltRounds)
         return hashedPassword
@@ -19,8 +20,21 @@ class AuthServiceClass {
         const secret = process.env.JWT_SECRET
         const result = jwt.sign({
             channels, id, login
-        }, secret as string)
+        }, AuthServiceClass.secret)
 
+        return result
+    }
+
+    async parseUserToken(token: string) {
+        const rawToken = token.replace('Bearer ', '')
+        const isValid = jwt.verify(rawToken, AuthServiceClass.secret)
+        if (!isValid) {
+            return null
+        }
+
+        const result = jwt.decode(rawToken, {
+            json: true
+        })
         return result
     }
 }
