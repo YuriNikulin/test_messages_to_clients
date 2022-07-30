@@ -12,10 +12,20 @@ const validate = getValidator({
     },
     password: {
         required: true
+    },
+    password2: {
+        required: true,
+        rules: [{
+            validator(value, formValues) {
+                if (value !== formValues.password) {
+                    return 'Пароли должны совпадать'
+                }
+            },
+        }]
     }
 })
 
-const LoginForm: FunctionComponent<LoginFormProps> = memo((props) => {
+const RegisterForm: FunctionComponent<LoginFormProps> = memo((props) => {
     return (
         <Form 
             onSubmit={props.onSubmit}
@@ -33,7 +43,7 @@ const LoginForm: FunctionComponent<LoginFormProps> = memo((props) => {
                                 }}
                             />
                         </div>
-                        <div className="mb-6">
+                        <div className="mb-3">
                             <FormField
                                 name="password"
                                 component={Input}
@@ -44,12 +54,23 @@ const LoginForm: FunctionComponent<LoginFormProps> = memo((props) => {
                                 }}
                             />
                         </div>
+                        <div className="mb-6">
+                            <FormField
+                                name="password2"
+                                component={Input}
+                                componentProps={{
+                                    placeholder: "Повторите пароль",
+                                    isPassword: true,
+                                    large: true
+                                }}
+                            />
+                        </div>
                         <div className="flex justify-space-between">
                             <Button type="submit" large loading={props.isLoading}>
-                                Войти
+                                Зарегистрироваться
                             </Button>
                             <Button minimal onClick={props.onAlternativeButtonClick}>
-                                Зарегистрироваться
+                                Вернуться к авторизации
                             </Button>
                         </div>
                     </form>
@@ -60,4 +81,4 @@ const LoginForm: FunctionComponent<LoginFormProps> = memo((props) => {
     )
 })
 
-export { LoginForm }
+export { RegisterForm }

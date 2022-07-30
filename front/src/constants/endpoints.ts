@@ -9,5 +9,10 @@ export const endpoints = {
     getUserInfo: {
         url: 'user/info',
         method: HTTPMethods.GET
+    },
+
+    register: {
+        url: 'user/register',
+        method: HTTPMethods.POST
     }
 }

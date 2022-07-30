@@ -7,27 +7,37 @@ import { hasUserToken, isObject } from 'utils/common'
 import { api } from 'api'
 import { endpoints } from 'constants/endpoints'
 import { saveToken } from 'utils/auth'
+import { useDebouncedState } from 'hooks/useDebouncedState'
+
+interface LoginParams {
+    login: string;
+    password: string;
+}
+
+type authAction = (data: { login: string, password: string }) => Promise<ApiResponse>
 
 interface ContextState {
     isLogged: boolean;
     user: IUser | null;
-    authorize: (data: { login: string, password: string }) => Promise<ApiResponse>
+    authorize: authAction;
+    register: authAction;
 }
 
 export const AuthContext = React.createContext<ContextState>({
     isLogged: false,
     user: null,
-    authorize: (() => {}) as any
+    authorize: (() => {}) as any,
+    register: (() => {}) as any
 })
 
 export const useAuth = () => useContext(AuthContext)
 
 const Auth: FunctionComponent = ({ children }) => {
-    const [state, setState] = useState<Omit<ContextState, 'authorize'>>({
+    const [state, setState] = useState<Pick<ContextState, 'isLogged' | 'user'>>({
         isLogged: false,
         user: null
     })
-    const isLoading = false
+    const [isLoading, setIsLoading] = useDebouncedState(true)
 
     const getUserInfo = useCallback(async () => {
         if (hasUserToken()) {
@@ -44,9 +54,9 @@ const Auth: FunctionComponent = ({ children }) => {
         return null
     }, [setState])
 
-    const authorize = useCallback(async (data: { login: string; password: string }) => {
+    const authorize = useCallback(async (data: LoginParams) => {
         const res = await api.makeRequest(endpoints.login, {
-            body: data,
+            body: { ...data },
         })
 
         if (res.type === ResponseType.SUCCESS && isObject(res.data) && res.data.token ) {
@@ -57,11 +67,24 @@ const Auth: FunctionComponent = ({ children }) => {
         return res
     }, [getUserInfo])
 
+    const register = useCallback(async (data: LoginParams) => {
+        const res = await api.makeRequest(endpoints.register, {
+            body: { ...data },
+            showMessageFromBack: true
+        })
+
+        if (res.type === ResponseType.SUCCESS) {
+            authorize(data)
+        }
+
+        return res
+    }, [authorize])
+
 
     const checkUserInfo = useCallback(async () => {
         await getUserInfo()
-        // setIsLoading(false)
-    }, [getUserInfo])
+        setIsLoading(false)
+    }, [getUserInfo, setIsLoading])
 
     useEffect(() => {
         checkUserInfo()
@@ -71,9 +94,10 @@ const Auth: FunctionComponent = ({ children }) => {
         return {
             isLogged: state.isLogged,
             user: state.user,
-            authorize
+            authorize,
+            register
         }
-    }, [state, authorize])
+    }, [state, authorize, register])
 
     if (isLoading) {
         return <Spinner />

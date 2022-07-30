@@ -6,21 +6,13 @@ import { withUser } from "../decorators/withUser"
 
 class UserController {
     static create: RequestHandler = async (req, res) => {
-        if (req.body.login && req.body.password && req.body.password2) {
+        if (req.body.login && req.body.password) {
             const existingUser = await User.getBy('login', req.body.login)
 
             if (existingUser) {
-                res.status(HTTP_STATUSES.ERROR_REQUEST).send({
+                return res.status(HTTP_STATUSES.ERROR_REQUEST).send({
                     login: 'Пользователь с таким именем уже существует'
                 })
-            }
-
-            if (req.body.password !== req.body.password2) {
-                res.status(HTTP_STATUSES.ERROR_REQUEST).send({
-                    password: 'Пароли не совпадают'
-                })
-
-                return
             }
 
             await User.save({
@@ -30,7 +22,7 @@ class UserController {
                 }
             })
 
-            return res.sendStatus(HTTP_STATUSES.SUCCESS)
+            return res.status(HTTP_STATUSES.SUCCESS).send({})
         } else {
             return res.status(HTTP_STATUSES.ERROR_REQUEST).send({
                 message: 'Все поля обязательны для заполнения'
@@ -101,7 +93,7 @@ class UserController {
 const UserRouter: Router = (app) => {
     app.get(`/${API_1}/user/list`, UserController.findMany)
 
-    app.post(`/${API_1}'user/register`, UserController.create)
+    app.post(`/${API_1}/user/register`, UserController.create)
 
     app.post(`/${API_1}/user/login`, UserController.login)
 

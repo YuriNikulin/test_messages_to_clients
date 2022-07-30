@@ -1,16 +1,23 @@
 import { Dialog, Classes } from '@blueprintjs/core'
 import { useAuth } from 'containers/Auth'
 import { useLoading } from 'hooks/useLoading'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { ResponseType } from 'types'
 import { LoginForm } from './login-form'
+import { RegisterForm } from './register-form'
 
 const Login: FunctionComponent = () => {
-    const { authorize } = useAuth()
+    const { authorize, register } = useAuth()
     const { executeAsyncOperation, isLoading } = useLoading()
+    const [ isRegistration, setIsRegistration ] = useState(false)
+
+    const toggleRegistration = useCallback(() => {
+        setIsRegistration(!isRegistration)
+    }, [isRegistration])
     
-    const handleSubmit: FormSubmitHandler = useCallback(async (values, form) => {
-        const res = await executeAsyncOperation(() => authorize({
+    const handleSubmit = useCallback(async (values: Record<string, any>, type: 'login' | 'register') => {
+        const fn = type === 'login' ? authorize : register
+        const res = await executeAsyncOperation(() => fn({
             login: values.login,
             password: values.password
         }))
@@ -18,12 +25,31 @@ const Login: FunctionComponent = () => {
         if (res?.type === ResponseType.ERRROR) {
             return res.data
         }
-    }, [authorize, executeAsyncOperation])
+    }, [authorize, register, executeAsyncOperation])
 
     return (
-        <Dialog isOpen title="Авторизация" isCloseButtonShown={false}>
+        <Dialog
+            isOpen
+            title={isRegistration ? "Регистрация" : "Авторизация"}
+            isCloseButtonShown={false}
+            key={`${isRegistration}`}
+        >
             <div className={Classes.DIALOG_BODY}>
-                <LoginForm onSubmit={handleSubmit} isLoading={isLoading} />
+                {
+                    isRegistration
+                    ? 
+                        <RegisterForm
+                            onSubmit={(v) => handleSubmit(v, 'register')}
+                            isLoading={isLoading}
+                            onAlternativeButtonClick={toggleRegistration}
+                        />
+                    :
+                        <LoginForm
+                            onSubmit={(v) => handleSubmit(v, 'login')}
+                            isLoading={isLoading}
+                            onAlternativeButtonClick={toggleRegistration}
+                        />
+                }
             </div>
         </Dialog>
     )

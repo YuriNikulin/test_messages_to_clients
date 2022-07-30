@@ -24,7 +24,7 @@ export const showNotification = (message: string, options?: ToastOptions) => {
         autoClose: 2000
     }
 
-    const _options = { ...options, ...defaultOptions } 
+    const _options = { ...defaultOptions, ...options } 
     toast(message, {
         position: 'bottom-right',
         hideProgressBar: true,
