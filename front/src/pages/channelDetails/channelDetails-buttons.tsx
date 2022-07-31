@@ -36,18 +36,37 @@ const ChannelButtons: FunctionComponent<ChannelButtonsProps> = React.memo((props
 
     const toggleButtonFormDialog = useCallback(() => {
         setState({
-            ...state,
+            editedButton: null,
             buttonFormIsOpen: !state.buttonFormIsOpen
         })
     }, [state])
 
     const handleButtonFormSubmit: FormSubmitHandler = useCallback((values) => {
-        props.change('buttons', value.concat({
-            id: values.id,
-            text: values.text,
-            url: values.url,
-            isLink: values.isLink
-        }))
+        let newValue: MessageButton[] = []
+        if (state.editedButton) {
+            let existedButtonIndex = value.findIndex(v => v.id === state.editedButton?.id)
+            if (existedButtonIndex !== -1) {
+                newValue = [
+                    ...value.slice(0, existedButtonIndex),
+                    {
+                        ...values as MessageButton,
+                        id: state.editedButton.id
+                    },
+                    ...value.slice(existedButtonIndex + 1)
+                ]
+                showNotification('Кнопка отредактирована', {
+                    type: 'success'
+                })
+            }
+        } else {
+            newValue = value.concat({
+                id: values.id,
+                text: values.text,
+                url: values.url,
+                isLink: values.isLink
+            })
+        }
+        props.change('buttons', newValue)
         
         if (!values.addOneMore) {
             toggleButtonFormDialog()
@@ -56,15 +75,21 @@ const ChannelButtons: FunctionComponent<ChannelButtonsProps> = React.memo((props
                 type: 'success'
             })
         }
-    }, [props.change, value, toggleButtonFormDialog])
+    }, [props.change, value, toggleButtonFormDialog, state])
 
     const handleButtonDelete = useCallback((id: string) => {
         props.change('buttons', value.filter(v => v.id !== id))
     }, [value])
 
+    const handleButtonEdit = useCallback((button: MessageButton) => {
+        setState({
+            buttonFormIsOpen: true,
+            editedButton: button
+        })
+    }, [state])
+
     const validator = useMemo(() => {
         const { config } = props
-        // config.
         const validator = getValidator({
             [FIELDS_BUTTON_FORM.text.id]: {
                 required: true,
@@ -93,11 +118,14 @@ const ChannelButtons: FunctionComponent<ChannelButtonsProps> = React.memo((props
                 (!config.buttonsMaxCount || (buttonsCounts.total < config.buttonsMaxCount)),
             canAddLinkButtons:
                 config.buttonsLinksAreSupported && 
-                (!config.buttonsLinksMaxCount || (buttonsCounts.links < config.buttonsLinksMaxCount)),
+                (!config.buttonsLinksMaxCount ||
+                (buttonsCounts.links < config.buttonsLinksMaxCount) ||
+                (state.editedButton?.isLink)
+                ),
             canAddNextButton: !config.buttonsMaxCount || config.buttonsMaxCount - buttonsCounts.total > 1,
             freeSlotsForButtons: !!config.buttonsMaxCount ? config.buttonsMaxCount - buttonsCounts.total : undefined 
         }
-    }, [buttonsCounts, props])
+    }, [buttonsCounts, props, state])
 
     return (
         <div className={css.buttons}>
@@ -126,7 +154,7 @@ const ChannelButtons: FunctionComponent<ChannelButtonsProps> = React.memo((props
                                 {
                                     (
                                         <div className={css.buttonsPopover}>
-                                            <Button intent="success">
+                                            <Button intent="success" onClick={() => handleButtonEdit(button)}>
                                                 Редактировать
                                             </Button>
                                             <Button intent="danger" onClick={() => handleButtonDelete(button.id)}>
@@ -154,6 +182,7 @@ const ChannelButtons: FunctionComponent<ChannelButtonsProps> = React.memo((props
                         validator={validator}
                         canAddButtonLinks={restrictions.canAddLinkButtons}
                         canAddNextButton={restrictions.canAddNextButton}
+                        initialValues={state.editedButton || undefined}
                     />
                 </div>
             </Dialog>

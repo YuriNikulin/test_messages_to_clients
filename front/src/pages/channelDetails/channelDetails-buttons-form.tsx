@@ -10,6 +10,7 @@ import { ChannelButtonFormProps } from "./channelForm-types"
 
 
 const ButtonsForm: FunctionComponent<ChannelButtonFormProps> = ( props ) => {
+    const isEdit = !!props.initialValues
     return (
         <Form onSubmit={props.onSubmit as any} initialValues={props.initialValues} validate={props.validator}>
             {(formProps) => {
@@ -54,6 +55,7 @@ const ButtonsForm: FunctionComponent<ChannelButtonFormProps> = ( props ) => {
                                             return (
                                                 <Switch
                                                     {...isLinkProps.input}
+                                                    defaultChecked={props.initialValues?.isLink}
                                                     large
                                                 />
                                             )
@@ -73,7 +75,7 @@ const ButtonsForm: FunctionComponent<ChannelButtonFormProps> = ( props ) => {
                         >
                             Сохранить
                         </Button>
-                        {props.canAddNextButton &&
+                        {!isEdit && props.canAddNextButton &&
                             <Button
                                 large
                                 type="submit"

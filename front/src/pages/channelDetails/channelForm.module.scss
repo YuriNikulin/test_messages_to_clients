@@ -2,6 +2,7 @@
 
 .textarea {
     &:global(.bp4-input) {
+        display: block;
         width: 500px;
         height: 250px;
         resize: none;
@@ -38,7 +39,6 @@
     }
 
     &Popover {
-        // height: 100px;
         padding: $pt-grid-size $pt-grid-size * 2;
         display: flex;
         align-items: flex-end;

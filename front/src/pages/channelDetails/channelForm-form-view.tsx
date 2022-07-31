@@ -3,6 +3,7 @@ import { Textarea, Radio } from "components/form"
 import { FormField } from "components/form-field"
 import React, { useCallback, useMemo } from "react"
 import { FieldRenderProps, Form } from "react-final-form"
+import { getValidator } from "utils/validator"
 import { ChannelButtons } from "./channelDetails-buttons"
 import { FIELDS } from "./channelDetails-constants"
 import { ChannelFormViewProps } from "./channelForm-types"
@@ -33,9 +34,18 @@ const ChannelFormView: FunctionComponent<ChannelFormViewProps> = React.memo(({ c
         )
     }, [inline, standart])
 
+    const validator = useMemo(() => {
+        return getValidator({
+            [FIELDS.text.id]: {
+                required: true,
+                maxLength: config.textMaxLength
+            }
+        })
+    }, [config])
+
     
     return (
-        <Form onSubmit={onSubmit} initialValues={initialValues}>
+        <Form onSubmit={onSubmit} initialValues={initialValues} validate={validator}>
             {(props) => {
                 return (
                     <form onSubmit={props.handleSubmit}>
@@ -81,7 +91,7 @@ const ChannelFormView: FunctionComponent<ChannelFormViewProps> = React.memo(({ c
                                         return (
                                             <ChannelButtons
                                                 change={props.form.change}
-                                                value={props.values[FIELDS.buttons.id]}
+                                                value={props.values[FIELDS.buttons.id] as MessageButton[]}
                                                 config={
                                                     props.values[FIELDS.keyboardType.id] === FIELDS.keyboardType.variants.inline.id
                                                     ?
