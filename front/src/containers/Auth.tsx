@@ -21,13 +21,15 @@ interface ContextState {
     user: IUser | null;
     authorize: authAction;
     register: authAction;
+    getUserInfo: () => any;
 }
 
 export const AuthContext = React.createContext<ContextState>({
     isLogged: false,
     user: null,
     authorize: (() => {}) as any,
-    register: (() => {}) as any
+    register: (() => {}) as any,
+    getUserInfo: () => {}
 })
 
 export const useAuth = () => useContext(AuthContext)
@@ -95,9 +97,10 @@ const Auth: FunctionComponent = ({ children }) => {
             isLogged: state.isLogged,
             user: state.user,
             authorize,
-            register
+            register,
+            getUserInfo
         }
-    }, [state, authorize, register])
+    }, [state, authorize, register, getUserInfo])
 
     if (isLoading) {
         return <Spinner />

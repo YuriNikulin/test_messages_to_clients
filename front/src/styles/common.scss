@@ -17,10 +17,15 @@ body {
     flex-direction: column;
 
     & > div {
+        display: flex;
         flex-grow: 1;
 
         &.Toastify {
             flex-grow: 0;
         }
     }
+}
+
+.content {
+    padding: $pt-grid-size $pt-grid-size * 1.5;
 }

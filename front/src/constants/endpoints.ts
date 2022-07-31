@@ -14,5 +14,10 @@ export const endpoints = {
     register: {
         url: 'user/register',
         method: HTTPMethods.POST
+    },
+
+    channels: {
+        url: 'getChannels',
+        method: HTTPMethods.GET
     }
 }

@@ -1,8 +1,8 @@
 import { StorageService } from '../services/StorageService'
 
 class Channel {
-    public static fillTableWithData() {
-        StorageService.sayHi()
+    public static async getAll() {
+        return await StorageService.channel.findMany()
     }
 }
 

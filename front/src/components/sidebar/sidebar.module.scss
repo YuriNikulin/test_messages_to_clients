@@ -1,0 +1,57 @@
+@import 'styles/variables.scss';
+
+.sidebar {
+    width: $sidebar_width;
+    flex-grow: 0;
+    flex-shrink: 0;
+    background-color: $sidebar_bg_color;
+    box-shadow: 3px 0px 5px rgba(0, 0, 0, .1);
+    overflow: hidden;
+}
+
+.link {
+    display: block;
+    padding: 16px 20px;
+    text-transform: uppercase;
+    color: $pt-link-color;
+    transition: .2s ease-in-out;
+    position: relative;
+
+    &:after {
+        content: '';
+        display: block;
+        height: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 4px;
+        opacity: 0;
+        background: $pt-link-color;
+        transition: .2s ease-in-out;
+        transform: translate(4px);
+    }
+
+    &, &:hover, &:focus {
+        text-decoration: none;
+        outline: none;
+    }
+
+    &:hover, &:global(.active) {
+        color: #fff;
+    }
+
+    &:hover {
+        background-color: $pt-text-selection-color;
+    }
+
+    &:global(.active) {
+        background-color: $pt-link-color;
+    }
+
+    &:hover, &:focus, &:global(.active) {
+        &:after {
+            opacity: 1;
+            transform: translate(0);
+        }
+    }
+}

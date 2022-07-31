@@ -26,8 +26,12 @@ const makeRequest = async (endpoint: Endpoint, config: ApiConfig = {}) => {
         }
 
         const res = await fetch(url, payload)
-
-        const resJson = await res.json()
+        let resJson
+        try {
+            resJson = await res.json()
+        } catch(e) {
+            resJson = {}
+        }
         result = { 
             type: res.ok ? ResponseType.SUCCESS : ResponseType.ERRROR,
             status: res.status,

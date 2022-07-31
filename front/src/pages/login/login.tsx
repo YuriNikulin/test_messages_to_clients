@@ -1,8 +1,9 @@
 import { Dialog, Classes } from '@blueprintjs/core'
 import { useAuth } from 'containers/Auth'
 import { useLoading } from 'hooks/useLoading'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ResponseType } from 'types'
+import { TEXT_AUTHORIZATION, TEXT_REGISTRATION } from './login-constants'
 import { LoginForm } from './login-form'
 import { RegisterForm } from './register-form'
 
@@ -13,6 +14,10 @@ const Login: FunctionComponent = () => {
 
     const toggleRegistration = useCallback(() => {
         setIsRegistration(!isRegistration)
+    }, [isRegistration])
+
+    useEffect(() => {
+        document.title = isRegistration ? TEXT_REGISTRATION : TEXT_AUTHORIZATION
     }, [isRegistration])
     
     const handleSubmit = useCallback(async (values: Record<string, any>, type: 'login' | 'register') => {
@@ -30,7 +35,7 @@ const Login: FunctionComponent = () => {
     return (
         <Dialog
             isOpen
-            title={isRegistration ? "Регистрация" : "Авторизация"}
+            title={isRegistration ? TEXT_REGISTRATION : TEXT_AUTHORIZATION}
             isCloseButtonShown={false}
             key={`${isRegistration}`}
         >

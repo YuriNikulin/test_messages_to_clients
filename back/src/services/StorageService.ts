@@ -34,11 +34,8 @@ class StorageServiceClass {
         this.storage = storage
     }
 
-    sayHi() {
-        console.log('hi from storage service')
-    }
-
     user = this.storage.user
+    channel = this.storage.channel
 }
 
 export const StorageService = new StorageServiceClass()

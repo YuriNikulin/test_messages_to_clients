@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { EntitiesKeys, IStorage, UserMethods, UserMethodsPayload } from 'types'
+import { ChannelMethods, EntitiesKeys, IStorage, UserMethods, UserMethodsPayload } from 'types'
 
 class DbServiceClass implements IStorage {
     prisma: PrismaClient
@@ -30,6 +30,21 @@ class DbServiceClass implements IStorage {
         // @ts-ignore
         findFirst: (args) => {
             return this.prisma.user.findFirst(args)
+        },
+    }
+
+    channel: ChannelMethods = {
+        create: (args) => {
+            return this.prisma.channel.create(args)
+        },
+
+        findMany: (args) => {
+            return this.prisma.channel.findMany(args)
+        },
+
+        // @ts-ignore
+        findFirst: (args) => {
+            return this.prisma.channel.findFirst(args)
         },
     }
 }

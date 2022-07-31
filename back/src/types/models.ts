@@ -14,8 +14,14 @@ export type UserMethodsPayload = {
     [method in keyof UserMethods]: Parameters<UserMethods[method]>[0]
 }
 
+export type ChannelMethods = Methods<'channel'>
+export type ChannelMethodsPayload = {
+    [method in keyof ChannelMethods]: Parameters<ChannelMethods[method]>[0]
+}
+
 type StorageEntities = {
-    user: UserMethods
+    user: UserMethods;
+    channel: ChannelMethods;
 }
 
 export interface IStorage extends StorageEntities {}

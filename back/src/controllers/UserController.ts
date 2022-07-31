@@ -1,6 +1,5 @@
 import { HTTP_STATUSES, RequestHandler, RequestWithUserHandler, Router, UserModel } from "../types"
 import { User } from "../entities"
-import { STATUS_CODES } from "http"
 import { API_1 } from "../constants"
 import { withUser } from "../decorators/withUser"
 
