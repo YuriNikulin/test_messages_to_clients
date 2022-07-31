@@ -3,6 +3,7 @@ import { Channel, User } from "../entities"
 import {
     API_1,
     ERROR_FIELDS_REQUIRED,
+    ERROR_NOT_ENOUGH_DATA,
     ERROR_USER_ALREADY_EXISTS,
     ERROR_USER_DONT_EXISTS,
     ERROR_WRONG_CREDENTIALS
@@ -132,6 +133,23 @@ class UserController {
         return throwNoUserError(res)
     }
 
+    @withUser()
+    static async editMessage(...[req, res]: Parameters<RequestWithUserHandler>) {
+        if (!req.user) {
+            return throwNoUserError(res)
+        }
+
+        if (!req.body || !req.body.content || !req.body.channelId) {
+            return res.status(HTTP_STATUSES.ERROR_REQUEST).send({
+                message: ERROR_NOT_ENOUGH_DATA
+            })
+        }
+
+        
+
+        return res.sendStatus(200)
+    }
+
     static findMany: RequestHandler = async (req, res) => {
         const result = await User.findMany()
         res.send(result)
@@ -148,6 +166,8 @@ const UserRouter: Router = (app) => {
     app.get(`/${API_1}/user/info`, UserController.getInfo as RequestHandler)
 
     app.patch(`/${API_1}/user/toggleChannel`, UserController.toggleChannel as RequestHandler)
+
+    app.patch(`/${API_1}/user/editMessage`, UserController.editMessage as RequestHandler)
 }
 
 export { UserRouter }

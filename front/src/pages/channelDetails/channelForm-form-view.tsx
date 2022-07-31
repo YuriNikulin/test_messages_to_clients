@@ -1,3 +1,4 @@
+import { Button } from "@blueprintjs/core"
 import { keyboard } from "@testing-library/user-event/dist/keyboard"
 import { Textarea, Radio } from "components/form"
 import { FormField } from "components/form-field"
@@ -10,10 +11,6 @@ import { ChannelFormViewProps } from "./channelForm-types"
 import css from './channelForm.module.scss'
 
 const ChannelFormView: FunctionComponent<ChannelFormViewProps> = React.memo(({ config, onSubmit }) => {
-    const handleSubmit: FormSubmitHandler = useCallback(() => {
-
-    }, [])
-
     const { inline, standart } = config.keyboardConfigs
 
     const initialValues = useMemo(() => {
@@ -36,7 +33,7 @@ const ChannelFormView: FunctionComponent<ChannelFormViewProps> = React.memo(({ c
 
     const validator = useMemo(() => {
         return getValidator({
-            [FIELDS.text.id]: {
+            [FIELDS.text.id as keyof Message]: {
                 required: true,
                 maxLength: config.textMaxLength
             }
@@ -45,7 +42,7 @@ const ChannelFormView: FunctionComponent<ChannelFormViewProps> = React.memo(({ c
 
     
     return (
-        <Form onSubmit={onSubmit} initialValues={initialValues} validate={validator}>
+        <Form onSubmit={onSubmit} initialValues={initialValues} validate={validator as any}>
             {(props) => {
                 return (
                     <form onSubmit={props.handleSubmit}>
@@ -87,13 +84,13 @@ const ChannelFormView: FunctionComponent<ChannelFormViewProps> = React.memo(({ c
                                 <FormField
                                     name={FIELDS.buttons.id}
                                 >
-                                    {(propsForButtons: FieldRenderProps<any>) => {
+                                    {() => {
                                         return (
                                             <ChannelButtons
                                                 change={props.form.change}
-                                                value={props.values[FIELDS.buttons.id] as MessageButton[]}
+                                                value={props.values[FIELDS.buttons.id as 'buttons']}
                                                 config={
-                                                    props.values[FIELDS.keyboardType.id] === FIELDS.keyboardType.variants.inline.id
+                                                    props.values[FIELDS.keyboardType.id as keyof Message['content']] === FIELDS.keyboardType.variants.inline.id
                                                     ?
                                                         inline
                                                     :
@@ -105,6 +102,16 @@ const ChannelFormView: FunctionComponent<ChannelFormViewProps> = React.memo(({ c
                                 </FormField>
                             </>
                         )}
+                        <div className={css.submitPanel}>
+                            <Button
+                                large
+                                intent="primary"
+                                type="submit"
+                                onClick={props.handleSubmit}
+                            >
+                                Сохранить
+                            </Button>
+                        </div>
                     </form>
                 )
             }}

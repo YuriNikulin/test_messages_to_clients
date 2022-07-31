@@ -2,7 +2,7 @@ import { Channel, User, PrismaClient, Prisma } from '@prisma/client'
 import { KeyboardType, Message as CommonMessage } from '../../../common/types'
 
 export interface Message extends CommonMessage {
-    channelId: string;
+    
 }
 
 export type UserModel = User & {

@@ -82,6 +82,7 @@ const ButtonsForm: FunctionComponent<ChannelButtonFormProps> = ( props ) => {
                                 onClick={(e) => {
                                     formProps.form.change(FIELDS_BUTTON_FORM.addOneMore.id, true)
                                     formProps.handleSubmit(e)
+                                    formProps.form.change(FIELDS_BUTTON_FORM.isLink.id, false)
                                 }}
                                 className="ml-3"
                             >

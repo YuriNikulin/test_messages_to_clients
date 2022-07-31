@@ -135,7 +135,6 @@ const ChannelButtons: FunctionComponent<ChannelButtonsProps> = React.memo((props
                 </h5>
                 <Button
                     large
-                    intent="primary"
                     icon="add"
                     onClick={toggleButtonFormDialog}
                     disabled={!restrictions.canAddButtons}

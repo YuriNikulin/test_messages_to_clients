@@ -39,4 +39,5 @@ export interface Message {
         buttons: Array<MessageButton>;
         keyboardType: KeyboardType;
     }
+    channelId: string;
 }

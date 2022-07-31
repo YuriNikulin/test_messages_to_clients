@@ -29,5 +29,10 @@ export const endpoints = {
     getChannelDetails: {
         url: 'channels/info',
         method: HTTPMethods.POST
+    },
+
+    editMessage: {
+        url: 'user/editMessage',
+        method: HTTPMethods.PATCH
     }
 }

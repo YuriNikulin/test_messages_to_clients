@@ -2,11 +2,12 @@ import { FormRenderProps } from "react-final-form";
 import { getValidator } from "utils/validator";
 
 export interface ChannelFormContainerProps {
+    onSubmit: (values: Message['content']) => any;
     config: ChannelContentConfig;
 }
 
 export interface ChannelFormViewProps {
-    onSubmit: FormSubmitHandler;
+    onSubmit: (values: Message['content']) => any;
     config: ChannelContentConfig;
 }
 
