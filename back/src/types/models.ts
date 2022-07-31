@@ -1,4 +1,18 @@
 import { Channel, User, PrismaClient, Prisma } from '@prisma/client'
+import { Key } from 'readline';
+import { KeyboardType } from '../../../common/types'
+
+export interface Message {
+    channelId: string;
+    content: {
+        text: string;
+        buttons: Array<{
+            id: string;
+            isLink?: boolean;
+        }>;
+        keyboardType: KeyboardType;
+    }
+}
 
 export type UserModel = User & {
     channels: Channel[];

@@ -5,6 +5,7 @@ import { Input } from 'components/form'
 import { FormField } from 'components/form-field'
 import { LoginFormProps } from './login-form-types'
 import { getValidator } from 'utils/validator'
+import { TEXT_LOGIN, TEXT_PASSWORD, TEXT_PASSWORD_REPEAT } from './login-constants'
 
 const validate = getValidator({
     login: {
@@ -37,8 +38,9 @@ const RegisterForm: FunctionComponent<LoginFormProps> = memo((props) => {
                             <FormField
                                 name="login"
                                 component={Input}
+                                label={TEXT_LOGIN}
                                 componentProps={{
-                                    placeholder: "Логин",
+                                    placeholder: TEXT_LOGIN,
                                     large: true
                                 }}
                             />
@@ -47,8 +49,9 @@ const RegisterForm: FunctionComponent<LoginFormProps> = memo((props) => {
                             <FormField
                                 name="password"
                                 component={Input}
+                                label={TEXT_PASSWORD}
                                 componentProps={{
-                                    placeholder: "Пароль",
+                                    placeholder: TEXT_PASSWORD,
                                     isPassword: true,
                                     large: true
                                 }}
@@ -58,8 +61,9 @@ const RegisterForm: FunctionComponent<LoginFormProps> = memo((props) => {
                             <FormField
                                 name="password2"
                                 component={Input}
+                                label={TEXT_PASSWORD_REPEAT}
                                 componentProps={{
-                                    placeholder: "Повторите пароль",
+                                    placeholder: TEXT_PASSWORD_REPEAT,
                                     isPassword: true,
                                     large: true
                                 }}

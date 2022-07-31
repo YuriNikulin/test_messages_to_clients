@@ -12,6 +12,7 @@ model User {
   login    String    @unique
   password String
   channels Channel[]
+  messages String[]
 }
 
 model Channel {

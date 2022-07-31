@@ -1,7 +1,8 @@
 import React from 'react'
-import { FormProps, Field } from 'react-final-form'
+import { FormProps } from 'react-final-form'
 import { ResponseType } from 'types';
 import { HTTPMethods } from './types'
+import { ChannelContentConfig as CommonChannelContentConfig } from '../../common/types'
 
 declare global {
     type FunctionComponent<P = {}> = React.FunctionComponent<P & {
@@ -9,7 +10,7 @@ declare global {
     }>;
     
     type FormSubmitHandler = FormProps['onSubmit'];
-    type Field = any
+    type ChannelContentConfig = CommonChannelContentConfig
 
     interface ValidatorConfig {
         [key: string]: {

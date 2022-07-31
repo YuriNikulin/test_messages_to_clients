@@ -9,7 +9,9 @@ type GenerateComponentProps<P> = {
 export type IFormFieldProps<Component extends React.ElementType = any, V = any> =
 FieldProps<V, any> & {
     component: Component;
-    componentProps: GenerateComponentProps<React.ComponentProps<Component>>
+    componentProps?: GenerateComponentProps<React.ComponentProps<Component>>
     required?: boolean;
+    label?: string;
+    showLabel?: boolean;
 }
 

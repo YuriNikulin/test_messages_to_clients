@@ -12,6 +12,7 @@ app.use(express.json())
 app.use(cors())
 
 app.listen(process.env.port)
+console.log(process.env.port)
 
 RootController(app)
 User.createFirstUserIfNecessary()

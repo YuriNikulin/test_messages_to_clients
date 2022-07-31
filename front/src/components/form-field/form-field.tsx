@@ -1,16 +1,26 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Field } from 'react-final-form'
 import { IFormFieldProps } from './form-field-types'
 
 const FormField = <Component extends React.ElementType<any>,>(props: IFormFieldProps<Component>) => {
-    const { componentProps, ...rest } = props
+    const { componentProps, showLabel = true, ...rest } = props
 
     return ( 
-        <Field
-            { ...rest }
-            { ...componentProps }
-        />
+        <div>
+            {rest.label && showLabel && (
+                <label className="label" htmlFor={rest.name}>
+                    {rest.label}
+                </label>
+            )}
+            <Field
+                { ...rest }
+                { ...componentProps }
+                id={rest.name}
+            />
+        </div>
     )
 }
 
-export { FormField }
+const FormFieldMemo  = React.memo(FormField) as typeof FormField
+
+export { FormFieldMemo as FormField }

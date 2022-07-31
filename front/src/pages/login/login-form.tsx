@@ -5,6 +5,7 @@ import { Input } from 'components/form'
 import { FormField } from 'components/form-field'
 import { LoginFormProps } from './login-form-types'
 import { getValidator } from 'utils/validator'
+import { TEXT_LOGIN, TEXT_PASSWORD } from './login-constants'
 
 const validate = getValidator({
     login: {
@@ -27,8 +28,9 @@ const LoginForm: FunctionComponent<LoginFormProps> = memo((props) => {
                             <FormField
                                 name="login"
                                 component={Input}
+                                label={TEXT_LOGIN}
                                 componentProps={{
-                                    placeholder: "Логин",
+                                    placeholder: TEXT_LOGIN,
                                     large: true
                                 }}
                             />
@@ -37,8 +39,9 @@ const LoginForm: FunctionComponent<LoginFormProps> = memo((props) => {
                             <FormField
                                 name="password"
                                 component={Input}
+                                label={TEXT_PASSWORD}
                                 componentProps={{
-                                    placeholder: "Пароль",
+                                    placeholder: TEXT_PASSWORD,
                                     isPassword: true,
                                     large: true
                                 }}

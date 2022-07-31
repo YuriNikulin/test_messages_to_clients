@@ -47,6 +47,7 @@
     ]
   },
   "devDependencies": {
-    "@types/react": "^18.0.15"
+    "@types/react": "^18.0.15",
+    "react-app-rewired": "^2.2.1"
   }
 }

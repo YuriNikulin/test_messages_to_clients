@@ -1,0 +1,7 @@
+.textarea {
+    &:global(.bp4-input) {
+        width: 500px;
+        height: 250px;
+        resize: none;
+    }
+}

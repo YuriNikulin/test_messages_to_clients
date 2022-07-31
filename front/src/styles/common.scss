@@ -19,6 +19,7 @@ body {
     & > div {
         display: flex;
         flex-grow: 1;
+        overflow: hidden;
 
         &.Toastify {
             flex-grow: 0;
@@ -28,8 +29,20 @@ body {
 
 .content {
     padding: $pt-grid-size $pt-grid-size * 1.5;
+    flex-grow: 1;
+    overflow: auto;
 }
 
 .page-title {
     margin-bottom: $pt-grid-size * 3;
+}
+
+.page-subtitle {
+    margin-bottom: $pt-grid-size * 3;
+    margin-top: -$pt-grid-size * 2;
+}
+
+.label {
+    margin-bottom: $pt-grid-size / 2;
+    display: block;
 }

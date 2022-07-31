@@ -17,7 +17,6 @@ class AuthServiceClass {
     }
 
     async generateUserToken({ channels, id, login }: UserModel) {
-        const secret = process.env.JWT_SECRET
         const result = jwt.sign({
             channels, id, login
         }, AuthServiceClass.secret)
