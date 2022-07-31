@@ -5,7 +5,7 @@ import { IChannel, ResponseType } from "types"
 import { routes } from "constants/routes"
 import { useLoading } from "hooks/useLoading"
 import { Spinner } from "@blueprintjs/core"
-import { isObject, showNotification } from "utils/common"
+import { getChannelTitle, isChannel, isObject, showNotification } from "utils/common"
 import { LOCAL_STORAGE_CHANNELS_KEY } from "constants/common"
 import { usePersistedState } from "hooks/usePersistedState"
 import { ChannelsList } from "./channels-list"
@@ -27,14 +27,14 @@ const Channels: FunctionComponent = () => {
     }
 
     const handleChannelToggle = useCallback(async (id: string) => {
-        const res = await api.makeRequest(endpoints.toggleChannel, {
+        const res = await executeAsyncOperation(() => api.makeRequest(endpoints.toggleChannel, {
             body: { id }
-        })
+        }))
         if (res.type === ResponseType.SUCCESS) {
             getUserInfo()
-            if (isObject(res.data) && isObject(res.data.channel)) {
+            if (isObject(res.data) && isChannel(res.data.channel)) {
                 showNotification(
-                    `Канал ${res.data.channel.name} ${res.data.action === 'added'
+                    `${getChannelTitle(res.data.channel)} ${res.data.action === 'added'
                         ? 'добавлен в список каналов'
                         : 'удалён из списка каналов'
                     }`,
@@ -54,12 +54,12 @@ const Channels: FunctionComponent = () => {
     return (
         <div>
             <h2 className="bp4-heading page-title">{routes.channels.title}</h2>
-            {isLoading && <Spinner />}
             <ChannelsList
                 channels={channels}
                 onChannelToggle={handleChannelToggle}
                 selectedChannels={usersChannels}
             />
+            {isLoading && <Spinner />}
         </div>
     )
 }

@@ -3,6 +3,7 @@ import { Icon } from '@blueprintjs/core'
 import { IconNames, iconNameToPathsRecordKey } from '@blueprintjs/icons'
 import { Storage } from "./localStorage"
 import { LOCAL_STORAGE_TOKEN_KEY } from "constants/common"
+import { IChannel } from "types"
 
 export const sleep = (ms: number, shouldReject?: boolean) => {
     return new Promise<void>((resolve, reject) => {
@@ -17,6 +18,7 @@ export const sleep = (ms: number, shouldReject?: boolean) => {
 }
 
 export const isObject = (value: unknown): value is Record<string, unknown> => typeof value === 'object'
+export const isChannel = (value: unknown): value is IChannel => isObject(value) && !!value.name
 
 export const showNotification = (message: string, options?: ToastOptions) => {
     const defaultOptions: ToastOptions = {
@@ -36,3 +38,6 @@ export const showNotification = (message: string, options?: ToastOptions) => {
 }
 
 export const hasUserToken = () => !!Storage.get(LOCAL_STORAGE_TOKEN_KEY)
+export const getChannelTitle = (channel: IChannel | string) => {
+    return `Канал ${isObject(channel) ? channel.name : channel}`   
+}

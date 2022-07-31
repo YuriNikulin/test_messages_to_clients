@@ -16,13 +16,18 @@ export const endpoints = {
         method: HTTPMethods.POST
     },
 
+    toggleChannel: {
+        url: 'user/toggleChannel',
+        method: HTTPMethods.PATCH
+    },
+
     channels: {
         url: 'channels/list',
         method: HTTPMethods.GET
     },
 
-    toggleChannel: {
-        url: 'user/toggleChannel',
-        method: HTTPMethods.PATCH
+    getChannelDetails: {
+        url: 'channels/info',
+        method: HTTPMethods.POST
     }
 }

@@ -6,7 +6,7 @@ export const routes = {
     },
     channelDetail: {
         id: 'channelsDetail',
-        path: '/channel/:id',
+        path: '/channels/:id',
         getUrl: (id: string) => `/channels/${id}`
     }
 }

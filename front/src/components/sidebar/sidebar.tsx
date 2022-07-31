@@ -5,6 +5,7 @@ import { routes } from 'constants/routes'
 
 import css from './sidebar.module.scss'
 import { Text } from '@blueprintjs/core'
+import { getChannelTitle } from 'utils/common'
 
 const Sidebar: FunctionComponent = React.memo(() => {
     const { user } = useAuth()
@@ -20,7 +21,7 @@ const Sidebar: FunctionComponent = React.memo(() => {
             user.channels.forEach((channel) => {
                 result.push({
                     id: channel.id,
-                    title: `Канал "${channel.name}"`,
+                    title: getChannelTitle(channel),
                     to: routes.channelDetail.getUrl(channel.id)
                 })
             })

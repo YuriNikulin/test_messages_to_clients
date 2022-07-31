@@ -4,4 +4,4 @@ export const ERROR_USER_NOT_FOUND = 'Не удалось получить дан
 export const ERROR_USER_ALREADY_EXISTS = 'Пользователь с таким именем уже существует'
 export const ERROR_USER_DONT_EXISTS = 'Пользователя с таким именем не существует'
 export const ERROR_WRONG_CREDENTIALS = 'Неправильное имя пользователя или пароль'
-// export const ERROR_ = 'Неправильное имя пользователя или пароль'
+export const ERROR_NOT_ENOUGH_DATA = 'Недостаточно данных для выполнения запроса'

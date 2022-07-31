@@ -30,7 +30,9 @@ const makeRequest = async (endpoint: Endpoint, config: ApiConfig = {}) => {
         try {
             resJson = await res.json()
         } catch(e) {
-            resJson = {}
+            resJson = {
+                message: `Произошла ошибка при выполнении запроса ${endpoint.url}`
+            }
         }
         result = { 
             type: res.ok ? ResponseType.SUCCESS : ResponseType.ERRROR,

@@ -5,10 +5,10 @@ import {
     ERROR_FIELDS_REQUIRED,
     ERROR_USER_ALREADY_EXISTS,
     ERROR_USER_DONT_EXISTS,
-    ERROR_USER_NOT_FOUND,
     ERROR_WRONG_CREDENTIALS
 } from "../constants"
 import { withUser } from "../decorators/withUser"
+import { throwNoUserError } from "../utils"
 
 class UserController {
     static create: RequestHandler = async (req, res) => {
@@ -85,9 +85,7 @@ class UserController {
             }
         }
 
-        return res.status(HTTP_STATUSES.ERROR_NOT_FOUND).send({
-            message: ERROR_USER_NOT_FOUND
-        })
+        return throwNoUserError(res)
     }
 
     @withUser()
@@ -131,9 +129,7 @@ class UserController {
             }
         }
 
-        return res.status(HTTP_STATUSES.ERROR_NOT_FOUND).send({
-            message: ERROR_USER_NOT_FOUND
-        })
+        return throwNoUserError(res)
     }
 
     static findMany: RequestHandler = async (req, res) => {
