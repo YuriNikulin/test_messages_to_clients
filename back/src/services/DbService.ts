@@ -31,6 +31,10 @@ class DbServiceClass implements IStorage {
         findFirst: (args) => {
             return this.prisma.user.findFirst(args)
         },
+
+        update: (args) => {
+            return this.prisma.user.update(args)
+        }
     }
 
     channel: ChannelMethods = {
@@ -46,6 +50,10 @@ class DbServiceClass implements IStorage {
         findFirst: (args) => {
             return this.prisma.channel.findFirst(args)
         },
+
+        update: (args) => {
+            return this.prisma.channel.update(args)
+        }
     }
 }
 

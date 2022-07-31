@@ -22,6 +22,7 @@ interface ContextState {
     authorize: authAction;
     register: authAction;
     getUserInfo: () => any;
+    usersChannels: Record<string, true>
 }
 
 export const AuthContext = React.createContext<ContextState>({
@@ -29,25 +30,33 @@ export const AuthContext = React.createContext<ContextState>({
     user: null,
     authorize: (() => {}) as any,
     register: (() => {}) as any,
-    getUserInfo: () => {}
+    getUserInfo: () => {},
+    usersChannels: {}
 })
 
 export const useAuth = () => useContext(AuthContext)
 
 const Auth: FunctionComponent = ({ children }) => {
-    const [state, setState] = useState<Pick<ContextState, 'isLogged' | 'user'>>({
+    const [state, setState] = useState<Pick<ContextState, 'isLogged' | 'user' | 'usersChannels'>>({
         isLogged: false,
-        user: null
+        user: null,
+        usersChannels: {}
     })
     const [isLoading, setIsLoading] = useDebouncedState(true)
+
+    const generateUsersChannelsDict = (user: IUser) => {
+        return user.channels.reduce((acc, curr) => ({ ...acc, [curr.id]: true }), {})
+    }
 
     const getUserInfo = useCallback(async () => {
         if (hasUserToken()) {
             const userInfo = await api.makeRequest(endpoints.getUserInfo)
             if (isObject(userInfo.data) && userInfo.data.user) {
+                const user = userInfo.data.user as IUser
                 setState({
                     isLogged: true,
-                    user: userInfo.data.user as IUser
+                    user: user,
+                    usersChannels: generateUsersChannelsDict(user)
                 })
                 return userInfo.data.user
             }
@@ -96,9 +105,10 @@ const Auth: FunctionComponent = ({ children }) => {
         return {
             isLogged: state.isLogged,
             user: state.user,
+            usersChannels: state.usersChannels,
             authorize,
             register,
-            getUserInfo
+            getUserInfo,
         }
     }, [state, authorize, register, getUserInfo])
 

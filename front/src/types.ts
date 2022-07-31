@@ -16,5 +16,8 @@ export enum ResponseType {
 
 export enum HTTPMethods {
     POST = "POST",
-    GET = "GET"
+    GET = "GET",
+    PATCH = "PATCH"
 }
+
+export type StorageType = 'localStorage' | 'sessionStorage'

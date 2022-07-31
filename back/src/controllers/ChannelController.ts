@@ -18,7 +18,7 @@ class ChannelController {
 }
 
 const ChannelRouter: Router = (app) => {
-    app.get(`/${API_1}/getChannels`, ChannelController.getAllChannels)
+    app.get(`/${API_1}/channels/list`, ChannelController.getAllChannels)
 }
 
 export { ChannelRouter }

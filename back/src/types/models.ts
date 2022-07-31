@@ -6,7 +6,7 @@ export type UserModel = User & {
 
 export type EntitiesKeys = 'channel' | 'user'
 export type PrismaClientType = InstanceType<typeof PrismaClient>
-type PrismaUsedMethods = 'create' | 'findMany' | 'findFirst'
+type PrismaUsedMethods = 'create' | 'findMany' | 'findFirst' | 'update'
 
 type Methods<Entity extends EntitiesKeys> = Pick<PrismaClientType[Entity], PrismaUsedMethods>
 export type UserMethods = Methods<'user'>

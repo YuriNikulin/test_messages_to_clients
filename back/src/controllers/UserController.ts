@@ -1,6 +1,13 @@
-import { HTTP_STATUSES, RequestHandler, RequestWithUserHandler, Router, UserModel } from "../types"
-import { User } from "../entities"
-import { API_1 } from "../constants"
+import { HTTP_STATUSES, RequestHandler, RequestWithUserHandler, Router, UserMethodsPayload, UserModel } from "../types"
+import { Channel, User } from "../entities"
+import {
+    API_1,
+    ERROR_FIELDS_REQUIRED,
+    ERROR_USER_ALREADY_EXISTS,
+    ERROR_USER_DONT_EXISTS,
+    ERROR_USER_NOT_FOUND,
+    ERROR_WRONG_CREDENTIALS
+} from "../constants"
 import { withUser } from "../decorators/withUser"
 
 class UserController {
@@ -10,7 +17,7 @@ class UserController {
 
             if (existingUser) {
                 return res.status(HTTP_STATUSES.ERROR_REQUEST).send({
-                    login: 'Пользователь с таким именем уже существует'
+                    login: ERROR_USER_ALREADY_EXISTS
                 })
             }
 
@@ -24,7 +31,7 @@ class UserController {
             return res.status(HTTP_STATUSES.SUCCESS).send({})
         } else {
             return res.status(HTTP_STATUSES.ERROR_REQUEST).send({
-                message: 'Все поля обязательны для заполнения'
+                message: ERROR_FIELDS_REQUIRED
             })
         }
     }
@@ -41,14 +48,14 @@ class UserController {
 
             if (!user) {
                 return res.status(HTTP_STATUSES.ERROR_NOT_FOUND).send({
-                    login: 'Пользователя с таким именем не существует'
+                    login: ERROR_USER_DONT_EXISTS
                 })
             }
 
             const credentialsAreCorrect = await User.checkCredentials(req.body.login, req.body.password)
             if (!credentialsAreCorrect) {
                 return res.status(HTTP_STATUSES.ERROR_REQUEST).send({
-                    password: 'Неправильное имя пользователя или пароль'
+                    password: ERROR_WRONG_CREDENTIALS
                 })
             }
 
@@ -60,7 +67,7 @@ class UserController {
             
         } else {
             res.status(HTTP_STATUSES.ERROR_REQUEST).send({
-                message: 'Все поля обязательны для заполнения'
+                message: ERROR_FIELDS_REQUIRED
             })
         }
     }
@@ -79,7 +86,53 @@ class UserController {
         }
 
         return res.status(HTTP_STATUSES.ERROR_NOT_FOUND).send({
-            message: 'Не удалось получить данные о пользователе'
+            message: ERROR_USER_NOT_FOUND
+        })
+    }
+
+    @withUser()
+    static async toggleChannel(...[req, res]: Parameters<RequestWithUserHandler>) {
+        if (req.user) {
+            const channelId = req.body.id
+            const channel = await Channel.getById(channelId)
+            const user = await User.getBy('id', req.user.id) as UserModel
+            if (channel && user) {
+                let data: UserMethodsPayload['update']['data'] = {}
+                const shouldAddChannel = !user.channels.some(c => c.id === channelId)
+                if (shouldAddChannel) {
+                    data = {
+                        channels: {
+                            connect: {
+                                id: channelId
+                            }
+                        }
+                    }
+                } else {
+                    data = {
+                        channels: {
+                            disconnect: {
+                                id: channelId
+                            }
+                        }
+                    }
+                }
+
+                await User.update({
+                    where: {
+                        id: user.id
+                    },
+                    data
+                })
+
+                return res.status(HTTP_STATUSES.SUCCESS).send({
+                    channel,
+                    action: shouldAddChannel ? 'added' : 'deleted'
+                })
+            }
+        }
+
+        return res.status(HTTP_STATUSES.ERROR_NOT_FOUND).send({
+            message: ERROR_USER_NOT_FOUND
         })
     }
 
@@ -97,6 +150,8 @@ const UserRouter: Router = (app) => {
     app.post(`/${API_1}/user/login`, UserController.login)
 
     app.get(`/${API_1}/user/info`, UserController.getInfo as RequestHandler)
+
+    app.patch(`/${API_1}/user/toggleChannel`, UserController.toggleChannel as RequestHandler)
 }
 
 export { UserRouter }

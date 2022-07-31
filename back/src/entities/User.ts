@@ -80,6 +80,10 @@ class User {
         return isPasswordCorrect
     }
 
+    public static update = async (data: UserMethodsPayload['update']) => {
+        return await StorageService.user.update(data)
+    }
+
     public static getToken = async(user: UserModel) => {
         return await AuthService.generateUserToken(user)
     }

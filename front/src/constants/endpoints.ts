@@ -17,7 +17,12 @@ export const endpoints = {
     },
 
     channels: {
-        url: 'getChannels',
+        url: 'channels/list',
         method: HTTPMethods.GET
+    },
+
+    toggleChannel: {
+        url: 'user/toggleChannel',
+        method: HTTPMethods.PATCH
     }
 }
