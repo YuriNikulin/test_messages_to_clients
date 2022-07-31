@@ -2,17 +2,11 @@ import { Button, Classes, Dialog, Popover } from "@blueprintjs/core";
 import { Popover2 } from "@blueprintjs/popover2";
 import React, { useCallback, useMemo, useState } from "react";
 import { showNotification } from "utils/common";
+import { getValidator } from "utils/validator";
 import { ButtonsForm } from "./channelDetails-buttons-form";
-import { FIELDS, TEXT_BUTTON_CREATE, TEXT_BUTTON_EDIT } from "./channelDetails-constants";
+import { FIELDS, FIELDS_BUTTON_FORM, TEXT_BUTTON_CREATE, TEXT_BUTTON_EDIT } from "./channelDetails-constants";
 import { ChannelButtonsProps } from "./channelForm-types";
 import css from './channelForm.module.scss'
-
-const testButtons: MessageButton[] = []
-for (let i = 0; i < 100; i++) {
-    testButtons.push({
-        text: 'asdqw rqwrqwrqw rqwrqwr Lorem Ipsum'
-    } as MessageButton)
-}
 
 const ChannelButtons: FunctionComponent<ChannelButtonsProps> = React.memo((props) => {
     const value = useMemo(() => {
@@ -24,6 +18,13 @@ const ChannelButtons: FunctionComponent<ChannelButtonsProps> = React.memo((props
             }
         })
     }, [props.value])
+
+    const buttonsCounts = useMemo(() => {
+        return {
+            total: value.length,
+            links: value.filter(v => v.isLink).length
+        }
+    }, [value])
 
     const [state, setState] = useState<{
         editedButton: MessageButton | null;
@@ -61,7 +62,42 @@ const ChannelButtons: FunctionComponent<ChannelButtonsProps> = React.memo((props
         props.change('buttons', value.filter(v => v.id !== id))
     }, [value])
 
-    console.log(value)
+    const validator = useMemo(() => {
+        const { config } = props
+        // config.
+        const validator = getValidator({
+            [FIELDS_BUTTON_FORM.text.id]: {
+                required: true,
+                maxLength: config.buttonTextMaxLength
+            },
+            [FIELDS_BUTTON_FORM.url.id]: {
+                rules: [
+                    {
+                        validator(value, formValues) {
+                            if (formValues.isLink && !value) {
+                                return 'Поле обязательно для заполнения'
+                            }
+                        },
+                    }
+                ]
+            }
+        })
+
+        return validator
+    }, [props.config])
+
+    const restrictions = useMemo(() => {
+        const { config } = props
+        return {
+            canAddButtons:
+                (!config.buttonsMaxCount || (buttonsCounts.total < config.buttonsMaxCount)),
+            canAddLinkButtons:
+                config.buttonsLinksAreSupported && 
+                (!config.buttonsLinksMaxCount || (buttonsCounts.links < config.buttonsLinksMaxCount)),
+            canAddNextButton: !config.buttonsMaxCount || config.buttonsMaxCount - buttonsCounts.total > 1,
+            freeSlotsForButtons: !!config.buttonsMaxCount ? config.buttonsMaxCount - buttonsCounts.total : undefined 
+        }
+    }, [buttonsCounts, props])
 
     return (
         <div className={css.buttons}>
@@ -74,8 +110,11 @@ const ChannelButtons: FunctionComponent<ChannelButtonsProps> = React.memo((props
                     intent="primary"
                     icon="add"
                     onClick={toggleButtonFormDialog}
+                    disabled={!restrictions.canAddButtons}
                 >
                     Добавить кнопку
+                    {!!restrictions.freeSlotsForButtons && restrictions.freeSlotsForButtons > 0 &&
+                        ` (доступно ${restrictions.freeSlotsForButtons})`}
                 </Button>
             </div>
             <div className={css.buttonsList}>
@@ -97,7 +136,7 @@ const ChannelButtons: FunctionComponent<ChannelButtonsProps> = React.memo((props
                                     )
                                 }
                         >
-                            <Button key={button.id}>
+                            <Button key={button.id} icon={button.isLink ? 'link' : undefined}>
                                 {button.text}
                             </Button>
                         </Popover2>
@@ -110,7 +149,12 @@ const ChannelButtons: FunctionComponent<ChannelButtonsProps> = React.memo((props
                 title={state.editedButton ? TEXT_BUTTON_EDIT : TEXT_BUTTON_CREATE}
             >
                 <div className={Classes.DIALOG_BODY}>
-                    <ButtonsForm onSubmit={handleButtonFormSubmit} />
+                    <ButtonsForm
+                        onSubmit={handleButtonFormSubmit}
+                        validator={validator}
+                        canAddButtonLinks={restrictions.canAddLinkButtons}
+                        canAddNextButton={restrictions.canAddNextButton}
+                    />
                 </div>
             </Dialog>
         </div>

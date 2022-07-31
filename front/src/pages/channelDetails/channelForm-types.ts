@@ -1,5 +1,5 @@
-import { SyntheticEvent } from "react";
 import { FormRenderProps } from "react-final-form";
+import { getValidator } from "utils/validator";
 
 export interface ChannelFormContainerProps {
     config: ChannelContentConfig;
@@ -19,4 +19,7 @@ export interface ChannelButtonsProps {
 export interface ChannelButtonFormProps {
     onSubmit: FormSubmitHandler;
     initialValues?: MessageButton;
+    validator: ReturnType<typeof getValidator>
+    canAddButtonLinks?: boolean;
+    canAddNextButton?: boolean;
 }

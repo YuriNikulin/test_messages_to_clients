@@ -24,6 +24,7 @@ declare global {
     interface ValidatorConfig {
         [key: string]: {
             required?: boolean;
+            maxLength?: number;
             rules?: Array<
                 {
                     validator: (value: any, formValues: Record<string, any>) => string | void;

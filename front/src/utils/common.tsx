@@ -41,3 +41,10 @@ export const hasUserToken = () => !!Storage.get(LOCAL_STORAGE_TOKEN_KEY)
 export const getChannelTitle = (channel: IChannel | string) => {
     return `Канал ${isObject(channel) ? channel.name : channel}`   
 }
+export const declOfNum = (value: number, words: [string, string, string]) => {
+    return words[
+        value % 100 > 4 && value % 100 < 20
+            ? 2
+            : [2, 0, 1, 1, 1, 2][value % 10 < 5 ? value % 10 : 5]
+    ]
+}
