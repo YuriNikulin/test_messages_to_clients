@@ -28,6 +28,10 @@ class StorageClass {
             return item
         }
     }
+
+    remove(key: string, options: StorageOptions = {}) {
+        this.defineStorage(options).removeItem(key)
+    }
 }
 
 export const Storage = new StorageClass()

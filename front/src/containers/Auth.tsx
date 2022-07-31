@@ -8,6 +8,8 @@ import { api } from 'api'
 import { endpoints } from 'constants/endpoints'
 import { saveToken } from 'utils/auth'
 import { useDebouncedState } from 'hooks/useDebouncedState'
+import { Storage } from 'utils/localStorage'
+import { LOCAL_STORAGE_TOKEN_KEY } from 'constants/common'
 
 interface LoginParams {
     login: string;
@@ -20,6 +22,7 @@ interface ContextState {
     isLogged: boolean;
     user: IUser | null;
     authorize: authAction;
+    unauthorize: () => void;
     register: authAction;
     getUserInfo: () => any;
     usersChannels: Record<string, true>
@@ -29,19 +32,22 @@ export const AuthContext = React.createContext<ContextState>({
     isLogged: false,
     user: null,
     authorize: (() => {}) as any,
+    unauthorize: () => {},
     register: (() => {}) as any,
     getUserInfo: () => {},
     usersChannels: {}
 })
 
+const initialValues = {
+    isLogged: false,
+    user: null,
+    usersChannels: {}
+}
+
 export const useAuth = () => useContext(AuthContext)
 
 const Auth: FunctionComponent = ({ children }) => {
-    const [state, setState] = useState<Pick<ContextState, 'isLogged' | 'user' | 'usersChannels'>>({
-        isLogged: false,
-        user: null,
-        usersChannels: {}
-    })
+    const [state, setState] = useState<Pick<ContextState, 'isLogged' | 'user' | 'usersChannels'>>(initialValues)
     const [isLoading, setIsLoading] = useDebouncedState(true)
 
     const generateUsersChannelsDict = (user: IUser) => {
@@ -91,6 +97,10 @@ const Auth: FunctionComponent = ({ children }) => {
         return res
     }, [authorize])
 
+    const unauthorize = useCallback(async () => {
+        Storage.remove(LOCAL_STORAGE_TOKEN_KEY)
+        setState(initialValues)
+    }, [])
 
     const checkUserInfo = useCallback(async () => {
         await getUserInfo()
@@ -107,10 +117,11 @@ const Auth: FunctionComponent = ({ children }) => {
             user: state.user,
             usersChannels: state.usersChannels,
             authorize,
+            unauthorize,
             register,
             getUserInfo,
         }
-    }, [state, authorize, register, getUserInfo])
+    }, [state, authorize, unauthorize, register, getUserInfo])
 
     if (isLoading) {
         return <Spinner />

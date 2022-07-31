@@ -1,6 +1,7 @@
 import { Spinner } from "@blueprintjs/core"
 import { api } from "api"
 import { endpoints } from "constants/endpoints"
+import { useAuth } from "containers/Auth"
 import { useLoading } from "hooks/useLoading"
 import { useEffect, useMemo, useState } from "react"
 import { useParams } from "react-router"
@@ -12,25 +13,22 @@ const ChannelDetails: FunctionComponent = () => {
     const params = useParams()
     const { executeAsyncOperation, isLoading } = useLoading()
     const [channelInfo, setChannelInfo] = useState<IChannel | null>(null)
-    const [config, setConfig] = useState(null)
+    const { usersChannels } = useAuth()
+    const [config, setConfig] = useState<ChannelContentConfig | null>(null)
 
     const getDetails = async (id: string) => {
         const res = await executeAsyncOperation(() => api.makeRequest(endpoints.getChannelDetails, {
             body: { id }
         }))
         if (res.type === ResponseType.SUCCESS && isObject(res.data) && isChannel(res.data.channel)) {
-            console.log(res)
             setChannelInfo(res.data.channel)
+            setConfig(res.data.config as ChannelContentConfig)
         }
     }
     
     useEffect(() => {
-        if (params.id) {
+        if (params.id && usersChannels[params.id]) {
             getDetails(params.id)
-
-            return () => {
-                setChannelInfo(null)
-            }
         }
     }, [params])
 
@@ -41,6 +39,10 @@ const ChannelDetails: FunctionComponent = () => {
     useEffect(() => {
         document.title = title
     }, [title])
+
+    if (!usersChannels[params.id as string] || !config) {
+        return null
+    }
     
     return (
         <div>
@@ -50,8 +52,12 @@ const ChannelDetails: FunctionComponent = () => {
                     Настройте сообщение, которое будет отправляться вашим клиентам в {channelInfo.name || ''}
                 </h5>
             }
-            <ChannelFormContainer />
-            {isLoading && <Spinner />}
+            <ChannelFormContainer config={config} />
+            {isLoading && (
+                <div className="spinner-overlay">
+                    <Spinner />
+                </div>
+            )}
         </div>
     )
 }

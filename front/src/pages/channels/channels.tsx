@@ -59,7 +59,11 @@ const Channels: FunctionComponent = () => {
                 onChannelToggle={handleChannelToggle}
                 selectedChannels={usersChannels}
             />
-            {isLoading && <Spinner />}
+            {isLoading && (
+                <div className="spinner-overlay">
+                    <Spinner />
+                </div>
+            )}
         </div>
     )
 }

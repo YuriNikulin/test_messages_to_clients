@@ -2,6 +2,7 @@ import { Sidebar } from "components/sidebar"
 import { routes } from "constants/routes"
 import { useNavigate } from "react-router"
 import { useEffect } from "react"
+import { Header } from "components/header"
 
 const Layout: FunctionComponent = ({ children }) => {
     const navigate = useNavigate()
@@ -15,8 +16,11 @@ const Layout: FunctionComponent = ({ children }) => {
     return (
         <div>
             <Sidebar />
-            <div className="content">
-                {children}
+            <div className="container">
+                <Header />
+                <main className="content">
+                    {children}
+                </main>
             </div>
         </div>
     )

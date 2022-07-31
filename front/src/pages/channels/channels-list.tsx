@@ -7,7 +7,7 @@ const ChannelsList: FunctionComponent<ChannelsListProps> = React.memo((props) =>
         <ul>
             {props.channels.map((channel) => {
                 return (
-                    <li key={channel.id}>
+                    <li key={channel.id} className="mb-6">
                         <Switch
                             label={channel.name}
                             large

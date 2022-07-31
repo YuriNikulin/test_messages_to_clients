@@ -1,7 +1,50 @@
+@import 'styles/variables.scss';
+
 .textarea {
     &:global(.bp4-input) {
         width: 500px;
         height: 250px;
         resize: none;
+    }
+}
+
+.buttons {
+    margin-top: $pt-grid-size * 3;
+
+    &Header {
+        display: flex;
+        align-items: center;
+
+        h5 {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        button {
+            margin-left: $pt-grid-size * 2;
+        }
+    }
+
+    &List {
+        margin-top: $pt-grid-size * 4;
+        max-height: 200px;
+        overflow: auto;
+
+        button {
+            margin-left: 0;
+            margin-right: $pt-grid-size;
+            margin-bottom: $pt-grid-size;
+        }
+    }
+
+    &Popover {
+        // height: 100px;
+        padding: $pt-grid-size $pt-grid-size * 2;
+        display: flex;
+        align-items: flex-end;
+
+        button:first-child {
+            margin-right: $pt-grid-size * 2;
+        }
     }
 }

@@ -1,15 +1,15 @@
-import { useCallback } from "react"
-import { Form } from "react-final-form"
+import { useCallback, memo } from "react"
 import { ChannelFormView } from './channelForm-form-view'
+import { ChannelFormContainerProps } from "./channelForm-types"
 
-const ChannelFormContainer: FunctionComponent = (props) => {
+const ChannelFormContainer: FunctionComponent<ChannelFormContainerProps> = memo((props) => {
     const handleSubmit: FormSubmitHandler = useCallback((values) => {
         console.log(values)
     }, [])
 
     return (
-        <ChannelFormView onSubmit={handleSubmit} />
+        <ChannelFormView onSubmit={handleSubmit} config={props.config} />
     )
-}
+})
 
 export { ChannelFormContainer }

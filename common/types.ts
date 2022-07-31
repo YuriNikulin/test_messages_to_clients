@@ -14,3 +14,29 @@ export interface ChannelContentConfig {
         [key in KeyboardType]: ChannelKeyboardConfig
     }
 }
+
+interface CommonButton {
+    isLink?: boolean;
+    id?: string;
+    url?: string;
+    text: string;
+}
+
+interface SimpleButton extends CommonButton {
+    isLink: true;
+}
+
+interface LinkButton extends CommonButton {
+    isLink: false;
+    url: string;
+}
+
+type MessageButton = SimpleButton | LinkButton
+
+export interface Message {
+    content: {
+        text: string;
+        buttons: Array<MessageButton>;
+        keyboardType: KeyboardType;
+    }
+}
