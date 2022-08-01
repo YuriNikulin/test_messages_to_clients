@@ -7,3 +7,6 @@ export const throwNoUserError = (res: Response) => {
         message: ERROR_USER_NOT_FOUND
     })
 }
+
+export const returnMessage = (message: string) => ({ message })
+export const getTextRawLength = (text: string) => `${text}`.replaceAll(' ', '').length

@@ -1,7 +1,16 @@
-import { HTTP_STATUSES, RequestHandler, RequestWithUserHandler, Router, UserMethodsPayload, UserModel } from "../types"
+import {
+    HTTP_STATUSES,
+    RequestHandler,
+    RequestWithUserHandler,
+    Router,
+    UserMethodsPayload,
+    UserModel
+} from "../types"
 import { Channel, User } from "../entities"
 import {
     API_1,
+    CHANNEL_CONFIG,
+    ERROR_CONFIG_NOT_FOUND,
     ERROR_FIELDS_REQUIRED,
     ERROR_NOT_ENOUGH_DATA,
     ERROR_USER_ALREADY_EXISTS,
@@ -10,6 +19,7 @@ import {
 } from "../constants"
 import { withUser } from "../decorators/withUser"
 import { throwNoUserError } from "../utils"
+import { MessageService } from "../services/MessageService"
 
 class UserController {
     static create: RequestHandler = async (req, res) => {
@@ -145,9 +155,19 @@ class UserController {
             })
         }
 
-        
+        const channel = await Channel.getById(req.body.channelId)
+        if (!channel || !CHANNEL_CONFIG[channel.id]) {
+            return res.status(HTTP_STATUSES.ERROR_NOT_FOUND).send({
+                message: ERROR_CONFIG_NOT_FOUND
+            })
+        }
 
-        return res.sendStatus(200)
+        const errors = await MessageService.validateMessage(req.body.content, CHANNEL_CONFIG[channel.id])
+        if (errors) {
+            return res.status(HTTP_STATUSES.ERROR_REQUEST).send(errors)
+        }
+
+        return res.status(HTTP_STATUSES.SUCCESS).send({})
     }
 
     static findMany: RequestHandler = async (req, res) => {

@@ -40,7 +40,6 @@ const ChannelFormView: FunctionComponent<ChannelFormViewProps> = React.memo(({ c
         })
     }, [config])
 
-    
     return (
         <Form onSubmit={onSubmit} initialValues={initialValues} validate={validator as any}>
             {(props) => {

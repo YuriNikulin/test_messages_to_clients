@@ -34,6 +34,7 @@ const ChannelDetails: FunctionComponent = () => {
         const res = await api.makeRequest(endpoints.editMessage, {
             body: body as any
         })
+        console.log(res)
     }, [params])
     
     useEffect(() => {

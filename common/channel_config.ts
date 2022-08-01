@@ -15,8 +15,7 @@ const config: Record<string, ChannelContentConfig> = {
         }
     },
     whatsapp: {
-        textMaxLength: 10,
-        // textMaxLength: 1000,
+        textMaxLength: 1000,
         keyboardConfigs: {
             standart: {
                 buttonsMaxCount: 10,

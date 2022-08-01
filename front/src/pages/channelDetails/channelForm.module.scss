@@ -35,6 +35,15 @@
             margin-left: 0;
             margin-right: $pt-grid-size;
             margin-bottom: $pt-grid-size;
+            max-width: 250px;
+            overflow: hidden;
+            white-space: nowrap;
+
+            :global(.bp4-button-text) {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
         }
     }
 

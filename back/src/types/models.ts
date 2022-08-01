@@ -1,5 +1,6 @@
 import { Channel, User, PrismaClient, Prisma } from '@prisma/client'
-import { KeyboardType, Message as CommonMessage } from '../../../common/types'
+import { Message as CommonMessage } from '../../../common/types'
+export { ChannelContentConfig } from '../../../common/types'
 
 export interface Message extends CommonMessage {
     
