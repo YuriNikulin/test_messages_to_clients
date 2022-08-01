@@ -23,3 +23,5 @@
 <li>В файле <code>src/config.ts</code> поменять значение переменной <code>storageType</code> с <code>localstorage</code> на <code>db</code></li>
 </ol>
 
+<h2>Приложение</h2>
+Приложение позволяет зарегистрировать нового пользователя. По умолчанию в приложении доступен пользователь <code>user/user</code>
