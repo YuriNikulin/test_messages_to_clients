@@ -98,6 +98,7 @@ class User {
     public static updateMessage = async (message: Message, user: UserModel) => {
         const userWithMessages = await User.getBy('id', user.id, {select: { userMessages: true }}) as UserModel
         let userMessages = userWithMessages.userMessages || []
+
         const shouldCreateNew = !userMessages.some(m => m.channelId === message.channelId)
         const contentJson = JSON.stringify(message.content)
         let payload: UserMethodsPayload['update']['data']['userMessages']

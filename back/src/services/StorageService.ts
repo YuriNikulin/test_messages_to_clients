@@ -7,7 +7,9 @@ import { IStorage } from 'types/index';
 
 
 class StorageServiceClass {
-    storage: IStorage = DbService;
+    storage: IStorage = LocalStorageService;
+    user = LocalStorageService.user
+    channel = LocalStorageService.channel
 
     async defineStorageType() {
         if (config.storageType === 'localstorage') {
@@ -32,11 +34,9 @@ class StorageServiceClass {
             console.log('Database is used as a storage')
         }
         this.storage = storage
+        this.user = storage.user
+        this.channel = storage.channel
     }
-
-    user = this.storage.user
-    channel = this.storage.channel
 }
 
 export const StorageService = new StorageServiceClass()
-StorageService.defineStorageType()

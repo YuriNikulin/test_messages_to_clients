@@ -15,6 +15,8 @@ export type UserModel = User & {
     userMessages?: MessageDB[];
 }
 
+export type ChannelModel = Channel
+
 export type EntitiesKeys = 'channel' | 'user'
 export type PrismaClientType = InstanceType<typeof PrismaClient>
 type PrismaUsedMethods = 'create' | 'findMany' | 'findFirst' | 'update'

@@ -1,9 +1,10 @@
 import express from 'express'
 import { RootController } from './controllers/RootController'
-import { config } from './config'
 import { User } from './entities'
 import dotenv from 'dotenv'
 import cors from 'cors'
+import { StorageService } from './services/StorageService'
+import { LocalStorageService } from './services/LocalStorageService'
 
 dotenv.config()
 const app = express()
@@ -15,4 +16,10 @@ app.listen(process.env.port)
 console.log(process.env.port)
 
 RootController(app)
-User.createFirstUserIfNecessary()
+
+const createFirstUser = async () => {
+    await StorageService.defineStorageType()
+    User.createFirstUserIfNecessary()
+}
+
+createFirstUser()
