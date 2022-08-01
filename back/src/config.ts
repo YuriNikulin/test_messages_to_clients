@@ -4,6 +4,6 @@ interface IConfig {
 }
 
 export const config: IConfig = {
-    storageType: 'db', // поменять на 'db', чтобы использовать базу данных,
+    storageType: 'localstorage', // поменять на 'db', чтобы использовать базу данных,
     passwordSaltRounds: 4
 }
