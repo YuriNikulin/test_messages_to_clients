@@ -2,6 +2,7 @@
 <h3>Запуск бэкенда в режиме разработчика</h3>
 <ol>
 <li>Перейти в директорию <code>back</code></li>
+<li>Переменовать файл <code>.env_example</code> на <code>.env</code></li>
 <li>Выполнить <code>npm install</code></li>
 <li>Выполнить <code>npm run dev</code></li>
 </ol>
