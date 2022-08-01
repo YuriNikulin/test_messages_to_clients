@@ -1,9 +1,18 @@
 import express from 'express'
-import { RootRouter } from './RootRouter'
-import config from './config.json'
+import { RootController } from './controllers/RootController'
+import { config } from './config'
+import { User } from './entities'
+import dotenv from 'dotenv'
+import cors from 'cors'
 
+dotenv.config()
 const app = express()
 
-app.listen(config.common.port)
+app.use(express.json())
+app.use(cors())
 
-RootRouter(app)
+app.listen(process.env.port)
+console.log(process.env.port)
+
+RootController(app)
+User.createFirstUserIfNecessary()

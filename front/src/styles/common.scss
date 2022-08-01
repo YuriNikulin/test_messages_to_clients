@@ -1,0 +1,81 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+body {
+    background-color: $background-color;
+    font-family: $font-family;
+}
+
+.error {
+    color: $pt-intent-danger;
+    font-size: $pt-font-size-small;
+}
+
+#root {
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    & > div {
+        display: flex;
+        flex-grow: 1;
+        overflow: hidden;
+
+        &.Toastify {
+            flex-grow: 0;
+        }
+    }
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.content {
+    padding: $pt-grid-size $content_padding;
+    padding-bottom: 48px;
+    flex-grow: 1;
+    overflow: auto;
+    position: relative;
+}
+
+.page-title {
+    margin-bottom: $pt-grid-size * 3;
+}
+
+.page-subtitle {
+    margin-bottom: $pt-grid-size * 3;
+    margin-top: -$pt-grid-size * 2;
+}
+
+.label {
+    margin-bottom: $pt-grid-size / 2;
+    display: block;
+}
+
+.spinner-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, .6);
+}
+
+.header {
+    background: #fff;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, .1);
+    position: relative;
+    z-index: 1;
+    height: $header_height;
+    flex-shrink: 0;
+    border-left: 1px solid $pt-divider-black;
+    display: flex;
+    padding: 0 $pt-grid-size * 2;
+}
