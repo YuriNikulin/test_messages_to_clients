@@ -1,7 +1,8 @@
 import { StorageService } from '../services/StorageService'
 import { AuthService } from '../services/AuthService'
-import { UserMethodsPayload, UserModel } from 'types'
+import { UserMethodsPayload, UserModel, Message } from 'types'
 import { userQuerySelector } from '../querySelectors'
+import { prisma } from '@prisma/client'
 
 class User {
     public static save = async (payload: UserMethodsPayload['create']) => {
@@ -78,6 +79,55 @@ class User {
 
         const isPasswordCorrect = await AuthService.comparePasswords(password, existingUser.password)
         return isPasswordCorrect
+    }
+
+    public static getMessageContent = async (channelId: string, userId: number) => {
+        try {
+            const userWithMessages = await User.getBy('id', userId, {
+                select: { userMessages: true }
+            }) as UserModel
+            const message = userWithMessages.userMessages?.find(m => m.channelId === channelId)
+            if (message && message.content) {
+                return JSON.parse(message.content)
+            }
+        } catch(e) {
+            return {}
+        }
+    }
+
+    public static updateMessage = async (message: Message, user: UserModel) => {
+        const userWithMessages = await User.getBy('id', user.id, {select: { userMessages: true }}) as UserModel
+        let userMessages = userWithMessages.userMessages || []
+        const shouldCreateNew = !userMessages.some(m => m.channelId === message.channelId)
+        const contentJson = JSON.stringify(message.content)
+        let payload: UserMethodsPayload['update']['data']['userMessages']
+        if (shouldCreateNew) {
+            payload = {
+                create: {
+                    channelId: message.channelId,
+                    content: contentJson
+                }
+            }
+        } else {
+            payload = {
+                update: {
+                    where: {
+                        channelId: message.channelId
+                    },
+                    data: {
+                        content: contentJson
+                    }
+                }
+            }
+        }
+        return await User.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                userMessages: payload
+            }
+        })
     }
 
     public static update = async (data: UserMethodsPayload['update']) => {

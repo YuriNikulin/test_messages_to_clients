@@ -1,6 +1,6 @@
 import { API_1, ERROR_NOT_ENOUGH_DATA, CHANNEL_CONFIG, ERROR_CONFIG_NOT_FOUND } from "../constants"
 import { HTTP_STATUSES, RequestHandler, RequestWithUserHandler, Router } from "../types"
-import { Channel } from "../entities"
+import { Channel, User } from "../entities"
 import { withUser } from "../decorators/withUser"
 import { throwNoUserError } from "../utils"
 
@@ -38,9 +38,13 @@ class ChannelController {
                 message: ERROR_CONFIG_NOT_FOUND
             })
         }
+
+        const content = await User.getMessageContent(channelId, req.user.id)
+
         return res.status(HTTP_STATUSES.SUCCESS).send({
             config: channelConfig,
-            channel
+            channel,
+            content
         })
     }
 }

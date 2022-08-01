@@ -8,15 +8,23 @@ datasource db {
 }
 
 model User {
-  id       Int       @id @unique @default(autoincrement())
-  login    String    @unique
-  password String
-  channels Channel[]
-  messages String[]
+  id          Int          @id @unique @default(autoincrement())
+  login       String       @unique
+  password    String
+  channels    Channel[]
+  userMessages UserMessage[]
 }
 
 model Channel {
   id    String @id @unique
   name  String @unique
   users User[]
+}
+
+model UserMessage {
+  id        Int    @id @unique @default(autoincrement())
+  channelId String @unique
+  user      User   @relation(fields: [userId], references: [id])
+  userId    Int    @unique
+  content   String
 }

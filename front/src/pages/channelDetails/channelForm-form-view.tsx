@@ -1,19 +1,25 @@
 import { Button } from "@blueprintjs/core"
-import { keyboard } from "@testing-library/user-event/dist/keyboard"
 import { Textarea, Radio } from "components/form"
 import { FormField } from "components/form-field"
-import React, { useCallback, useMemo } from "react"
-import { FieldRenderProps, Form } from "react-final-form"
+import React, { useMemo } from "react"
+import { Form } from "react-final-form"
 import { getValidator } from "utils/validator"
 import { ChannelButtons } from "./channelDetails-buttons"
 import { FIELDS } from "./channelDetails-constants"
 import { ChannelFormViewProps } from "./channelForm-types"
 import css from './channelForm.module.scss'
 
-const ChannelFormView: FunctionComponent<ChannelFormViewProps> = React.memo(({ config, onSubmit }) => {
+const ChannelFormView: FunctionComponent<ChannelFormViewProps> = React.memo(({
+    config,
+    onSubmit,
+    initialValues: propsInitialValues
+}) => {
     const { inline, standart } = config.keyboardConfigs
 
     const initialValues = useMemo(() => {
+        if (propsInitialValues) {
+            return propsInitialValues
+        }
         const result: Record<string, any> = {}
         if (standart.isSupported !== false) {
             result[FIELDS.keyboardType.id] = FIELDS.keyboardType.variants.standart.id
@@ -22,7 +28,7 @@ const ChannelFormView: FunctionComponent<ChannelFormViewProps> = React.memo(({ c
         }
 
         return result
-    }, [inline, standart])
+    }, [inline, standart, propsInitialValues])
 
     const shouldRenderKeyboardSettings = useMemo(() => {
         return !(

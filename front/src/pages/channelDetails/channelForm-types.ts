@@ -4,11 +4,13 @@ import { getValidator } from "utils/validator";
 export interface ChannelFormContainerProps {
     onSubmit: (values: Message['content']) => any;
     config: ChannelContentConfig;
+    initialValues?: Message['content'];
 }
 
 export interface ChannelFormViewProps {
     onSubmit: (values: Message['content']) => any;
     config: ChannelContentConfig;
+    initialValues?: Message['content'];
 }
 
 export interface ChannelButtonsProps {

@@ -167,6 +167,8 @@ class UserController {
             return res.status(HTTP_STATUSES.ERROR_REQUEST).send(errors)
         }
 
+        await User.updateMessage(req.body, req.user)
+
         return res.status(HTTP_STATUSES.SUCCESS).send({})
     }
 

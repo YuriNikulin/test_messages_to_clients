@@ -23,7 +23,7 @@ export const isChannel = (value: unknown): value is IChannel => isObject(value) 
 export const showNotification = (message: string, options?: ToastOptions) => {
     const defaultOptions: ToastOptions = {
         type: 'info',
-        autoClose: 2000
+        autoClose: 3000
     }
 
     const _options = { ...defaultOptions, ...options } 

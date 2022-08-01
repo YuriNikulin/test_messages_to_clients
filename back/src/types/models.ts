@@ -6,8 +6,13 @@ export interface Message extends CommonMessage {
     
 }
 
+export type MessageDB = Message & {
+    content: string;
+}
+
 export type UserModel = User & {
     channels: Channel[];
+    userMessages?: MessageDB[];
 }
 
 export type EntitiesKeys = 'channel' | 'user'
