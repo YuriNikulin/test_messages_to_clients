@@ -23,8 +23,8 @@ model Channel {
 
 model UserMessage {
   id        Int    @id @unique @default(autoincrement())
-  channelId String @unique
+  channelId String 
   user      User   @relation(fields: [userId], references: [id])
-  userId    Int    @unique
+  userId    Int
   content   String
 }

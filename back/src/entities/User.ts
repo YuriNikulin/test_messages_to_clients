@@ -111,7 +111,7 @@ class User {
             }
         } else {
             payload = {
-                update: {
+                updateMany: {
                     where: {
                         channelId: message.channelId
                     },

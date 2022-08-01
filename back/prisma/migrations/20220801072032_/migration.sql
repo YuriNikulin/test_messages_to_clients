@@ -20,9 +20,6 @@ CREATE TABLE "UserMessage" (
 -- CreateIndex
 CREATE UNIQUE INDEX "UserMessage_id_key" ON "UserMessage"("id");
 
--- CreateIndex
-CREATE UNIQUE INDEX "UserMessage_userId_key" ON "UserMessage"("userId");
-CREATE UNIQUE INDEX "UserMessage_channelId_key" ON "UserMessage"("channelId");
 
 -- AddForeignKey
 ALTER TABLE "UserMessage" ADD CONSTRAINT "UserMessage_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

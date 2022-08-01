@@ -64,8 +64,8 @@ class LocalStorageServiceClass implements IStorage {
             }
 
             if (args.data.userMessages) {
-                const data = args.data.userMessages.create || args.data.userMessages.update.data
-                const channelId = args.data.userMessages.create?.channelId || args.data.userMessages.update?.where?.channelId
+                const data = args.data.userMessages.create || args.data.userMessages.updateMany?.data
+                const channelId = args.data.userMessages.create?.channelId || args.data.userMessages.updateMany?.where?.channelId
                 res.userMessages = this.storage.user.userMessages?.filter(m => m.channelId !== channelId).concat({
                     channelId,
                     ...data,
